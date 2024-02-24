@@ -255,7 +255,8 @@ PRODUCT_PACKAGES += \
     init.sim.restart.sh \
     init.target.rc \
     ueventd.nt.rc \
-    ueventd.qcom.rc
+    ueventd.qcom.rc \
+    ueventd.phone2.rc
 
 # Keymaster
 PRODUCT_PACKAGES += \
@@ -523,6 +524,10 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_BOOT_JARS += \
     WfdCommon
+
+# Lineage Health
+PRODUCT_PACKAGES += \
+    vendor.lineage.health-service.default
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/nothing/Pong/Pong-vendor.mk)

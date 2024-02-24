@@ -222,5 +222,8 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 DEVICE_MAINTAINER := Noah Anleitner (N0m4n904)
 
+# Lineage Health
+TARGET_HEALTH_CHARGING_CONTROL_CHARGING_PATH := /sys/class/qcom-battery/charging_en
+
 # Include the proprietary files BoardConfig.
 include vendor/nothing/Pong/BoardConfigVendor.mk
