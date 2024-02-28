@@ -324,9 +324,6 @@
     <!-- Type of the tap sensor. Empty if tap is not supported. -->
     <string name="config_dozeTapSensorType" translatable="false">org.lineageos.sensor.single_touch</string>
 
-     <!-- Fingerprint from stock ROM -->
-    <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:12/SKQ1.230722.001/2408281751:user/release-keys</string>
-
     <integer translatable="false" name="config_brightness_ramp_rate_slow">50</integer>
     
     <!-- Fast brightness animation ramp rate in brightness units per second-->
@@ -484,4 +481,8 @@
 
     <!-- Colon separated list of package names that should be granted Notification Listener access -->
     <string name="config_defaultListenerAccessPackages" translatable="false">co.aospa.glyph</string>
+
+    <!-- Fingerprint from stock ROM -->
+    <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:12/SKQ1.230722.001/2408281751:user/release-keys</string>
+
 </resources>
