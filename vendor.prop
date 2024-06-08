@@ -133,6 +133,10 @@ vendor.display.vds_allow_hwc=1
 # DRM
 drm.service.enabled=true
 
+# Fling velocities
+ro.min.fling_velocity=140
+ro.max.fling_velocity=19200
+
 # FRP
 ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
