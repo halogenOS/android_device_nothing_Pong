@@ -8,4 +8,8 @@
     <!-- Color of the UDFPS Pressed view -->
     <color name="config_udfpsColor">#ffffe6</color>
 
+    <!-- Set audio panel to the left side -->
+    <bool name="config_audioPanelOnLeftSide">true</bool>
+    <integer name="volume_dialog_gravity">19</integer>
+
 </resources>
