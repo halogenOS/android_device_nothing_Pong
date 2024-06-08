@@ -10,5 +10,9 @@
 
     <!-- The CPU temperature divider, if needed -->
     <integer name="config_cpuTempDivider" translatable="false">1000</integer>
+    
+    <!-- Set audio panel to the left side -->
+    <bool name="config_audioPanelOnLeftSide">true</bool>
+    <integer name="volume_dialog_gravity">19</integer>
 
 </resources>
