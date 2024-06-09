@@ -249,6 +249,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     fstab.qcom \
     init.class_main.sh \
+    init.crda.sh \
+    init.kernel.post_boot-cape.sh \
+    init.kernel.post_boot.sh \
+    init.mdm.sh \
     init.nt.rc \
     init.qcom.early_boot.sh \
     init.qcom.rc \
@@ -257,9 +261,13 @@ PRODUCT_PACKAGES += \
     init.qcom.usb.rc \
     init.qcom.usb.sh \
     init.sim.restart.sh \
+    init.qti.kernel.rc \
+    init.qti.kernel.sh \
+    init.qti.write.sh \
     init.target.rc \
     ueventd.nt.rc \
-    ueventd.qcom.rc
+    ueventd.qcom.rc \
+    vendor_modprobe.sh
 
 # Keymaster
 PRODUCT_PACKAGES += \

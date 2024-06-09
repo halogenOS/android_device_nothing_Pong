@@ -31,6 +31,13 @@ prebuilt_etc {
 }
 
 prebuilt_etc {
+    name: "init.qti.kernel.rc",
+    src: "init.qti.kernel.rc",
+    sub_dir: "init/hw",
+    vendor: true,
+}
+
+prebuilt_etc {
     name: "init.target.rc",
     src: "init.target.rc",
     sub_dir: "init/hw",
@@ -66,6 +73,48 @@ sh_binary {
 sh_binary {
     name: "init.qcom.sh",
     src: "init.qcom.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.crda.sh",
+    src: "init.crda.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.mdm.sh",
+    src: "init.mdm.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.kernel.post_boot.sh",
+    src: "init.kernel.post_boot.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.kernel.post_boot-cape.sh",
+    src: "init.kernel.post_boot-cape.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.qti.kernel.sh",
+    src: "init.qti.kernel.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.qti.write.sh",
+    src: "init.qti.write.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "vendor_modprobe.sh",
+    src: "vendor_modprobe.sh",
     vendor: true,
 }
 
