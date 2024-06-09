@@ -324,8 +324,6 @@
      <bool name="config_supportsMicToggle">true</bool>
      <bool name="config_supportsCamToggle">true</bool>
 
-     <!-- Colon separated list of package names that should be granted Notification Listener access -->
-     <string name="config_defaultListenerAccessPackages" translatable="false">co.aospa.glyph</string>
 
      <string name="config_stockFingerprint">Nothing/Pong/Pong:12/SKQ1.230722.001/2404101247:user/release-keys</string>
 
