@@ -384,4 +384,8 @@
     
      <!-- Fingerprint from stock ROM -->
     <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:12/SKQ1.230722.001/2401161446:user/release-keys</string>
+    
+    <!-- Colon separated list of package names that should be granted Notification Listener access -->
+    <string name="config_defaultListenerAccessPackages" translatable="false">co.aospa.glyph</string>
+
 </resources>
