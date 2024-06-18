@@ -303,9 +303,6 @@
      <!-- Fingerprint from stock ROM -->
     <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:14/UP1A.231005.007/2406061801:user/release-keys</string>
     
-    <!-- Colon separated list of package names that should be granted Notification Listener access -->
-    <string name="config_defaultListenerAccessPackages" translatable="false">co.aospa.glyph</string>
-    
     <integer translatable="false" name="config_brightness_ramp_rate_slow">50</integer>
     
     <!-- Fast brightness animation ramp rate in brightness units per second-->
