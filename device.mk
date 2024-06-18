@@ -337,6 +337,10 @@ PRODUCT_PACKAGES += \
     libstagefrighthw
 
 # Overlays
+PRODUCT_PACKAGES += \
+    PongApertureRes\
+    PongCarrierConfig \
+    
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
 DEVICE_PACKAGE_OVERLAYS += \
