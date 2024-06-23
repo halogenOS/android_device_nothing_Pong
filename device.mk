@@ -362,7 +362,6 @@ PRODUCT_PACKAGES += \
 
 # PONG overlays
 PRODUCT_PACKAGES += \
-    NTCarrierConfigResTarget \
     NTFrameworksResTarget \
     NTSettingsProviderResTarget \
     NTSettingsResTarget \
