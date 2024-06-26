@@ -125,6 +125,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="true" />
         <!-- AOSPA Edit: Hide IMS APN by default -->
         <boolean name="hide_ims_apn_bool" value="true" />
+        <!-- Use 4G icon for LTE -->
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="001" mnc="01">
@@ -718,7 +720,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="hide_lte_plus_data_icon_bool" value="false" />
     </carrier_config>
 
@@ -742,7 +744,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="hide_lte_plus_data_icon_bool" value="false" />
     </carrier_config>
 
@@ -762,7 +764,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="hide_lte_plus_data_icon_bool" value="false" />
     </carrier_config>
 
@@ -3168,7 +3170,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_default_wfc_ims_enabled_bool" value="true" />
         <string name="default_vm_number_string">3311</string>
         <boolean name="hide_lte_plus_data_icon_bool" value="false" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="wlan_call_title_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="hide_ims_apn_bool" value="true" />
@@ -4288,7 +4290,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="carrier_wfc_ims_available_bool" value="false" />
         <boolean name="show_4glte_for_lte_data_icon_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="nt_carrier_default_smart_5g_enabled_bool" value="false" />
         <string-array name="nt_5g_plus_display_rules_string_array" num="1">
             <item value="UWB" />
@@ -4662,7 +4664,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
     </carrier_config>
     <carrier_config cid="1662" name="PLAY">
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="hide_lte_plus_data_icon_bool" value="false" />
         <int name="smsToMmsTextThreshold" value="6" />
         <boolean name="smsEncodingChangeable" value="true" />
@@ -4799,7 +4801,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="carrier_wfc_ims_available_bool" value="false" />
         <boolean name="show_4glte_for_lte_data_icon_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="nt_carrier_default_smart_5g_enabled_bool" value="false" />
         <string-array name="nt_5g_plus_display_rules_string_array" num="1">
             <item value="UWB" />
@@ -5069,7 +5071,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="carrier_wfc_ims_available_bool" value="false" />
         <boolean name="show_4glte_for_lte_data_icon_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <string-array name="nt_5g_plus_display_rules_string_array" num="1">
             <item value="UWB" />
         </string-array>
@@ -5078,7 +5080,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="carrier_wfc_ims_available_bool" value="false" />
         <boolean name="show_4glte_for_lte_data_icon_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <string-array name="nt_5g_plus_display_rules_string_array" num="1">
             <item value="UWB" />
         </string-array>
@@ -5547,7 +5549,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="carrier_wfc_ims_available_bool" value="false" />
         <boolean name="show_4glte_for_lte_data_icon_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="nt_carrier_default_smart_5g_enabled_bool" value="false" />
         <string-array name="nt_5g_plus_display_rules_string_array" num="1">
             <item value="UWB" />
@@ -5560,7 +5562,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="carrier_wfc_ims_available_bool" value="false" />
         <boolean name="show_4glte_for_lte_data_icon_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="nt_carrier_default_smart_5g_enabled_bool" value="false" />
         <string-array name="nt_5g_plus_display_rules_string_array" num="1">
             <item value="UWB" />
@@ -5570,7 +5572,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="false" />
         <boolean name="carrier_wfc_ims_available_bool" value="false" />
         <boolean name="show_4glte_for_lte_data_icon_bool" value="true" />
-        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="true" />
         <boolean name="nt_carrier_default_smart_5g_enabled_bool" value="false" />
         <string-array name="nt_5g_plus_display_rules_string_array" num="1">
             <item value="UWB" />
