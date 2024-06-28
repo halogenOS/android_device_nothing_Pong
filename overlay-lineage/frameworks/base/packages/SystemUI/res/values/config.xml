@@ -6,7 +6,7 @@
 <resources>
 
     <!-- Color of the UDFPS Pressed view -->
-    <color name="config_udfpsColor">#ffffe6</color>
+    <color name="config_udfpsColor">#18cbff</color>
 
     <!-- The CPU temperature divider, if needed -->
     <integer name="config_cpuTempDivider" translatable="false">1000</integer>
