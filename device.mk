@@ -340,6 +340,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     PongApertureRes\
     PongCarrierConfig \
+    PongSystemUI \
     
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
@@ -365,7 +366,6 @@ PRODUCT_PACKAGES += \
     NTFrameworksResTarget \
     NTSettingsProviderResTarget \
     NTSettingsResTarget \
-    NTSystemUIResTarget \
     NTWifiResTarget
 
 # Project ID Quota
