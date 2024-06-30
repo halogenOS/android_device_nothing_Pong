@@ -180,8 +180,9 @@ Return<RequestStatus> BiometricsFingerprint::enroll(const hidl_array<uint8_t, 69
 }
 
 Return<RequestStatus> BiometricsFingerprint::postEnroll() {
-    setFodHbm(false);
     mDevice->goodixExtCmd(mDevice, 0, 0);
+    usleep(150 * 1000);
+    setFodHbm(false);
     return ErrorFilter(mDevice->post_enroll(mDevice));
 }
 
