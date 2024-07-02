@@ -280,8 +280,11 @@
          config_mainBuiltInDisplayCutout
          -->
     <string translatable="false" name="config_mainBuiltInDisplayCutoutRectApproximation">
-        M454.0, 0.0 h 86.0 v 94 h -86.0 Z
-        @left
+        M -38,0
+        L -38,120
+        L 38,120
+        L 38,0
+        Z
     </string>
 
     <!-- The properties of a UDFPS sensor in pixels, in the order listed below: -->
