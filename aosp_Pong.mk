@@ -33,3 +33,9 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_PRODUCT=$(PRODUCT_SYSTEM_NAME)
 
 BUILD_FINGERPRINT := Nothing/Pong/Pong:12/SKQ1.230722.001/2406061801:user/release-keys
+
+# If we are able to get free (libre) components up to date,
+# we can override the security patch level with this.
+#
+# If PLATFORM_SECURITY_PATCH is newer than the value we set here in PLATFORM_SECURITY_PATCH_OVERRIDE, PLATFORM_SECURITY_PATCH is used.
+PLATFORM_SECURITY_PATCH_OVERRIDE := 2024-06-05
