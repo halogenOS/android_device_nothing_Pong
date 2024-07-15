@@ -179,7 +179,6 @@ simulated_ntc.ko
 slimbus.ko
 slim-qcom-ngd-ctrl.ko
 hwmon.ko
-stm_p_ost.ko
 stm_console.ko
 stm_ftrace.ko
 snd-usb-audio-qmi.ko
