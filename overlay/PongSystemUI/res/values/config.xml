@@ -12,4 +12,7 @@
     <!-- Color of the UDFPS Pressed view -->
     <color name="config_udfpsColor">#18cbff</color>
 
+    <!-- Status Bar Burn-In Protection -->
+    <bool name="config_statusBarBurnInProtection">false</bool>
+
 </resources>
