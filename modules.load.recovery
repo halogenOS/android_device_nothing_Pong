@@ -28,7 +28,6 @@ gh_ctrl.ko
 gh_dbl.ko
 gh_msgq.ko
 gh_rm_drv.ko
-gh_virt_wdt.ko
 hwkm.ko
 icc-bcm-voter.ko
 iommu-logger.ko
