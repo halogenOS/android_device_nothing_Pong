@@ -3,8 +3,10 @@ persist.vendor.audio.fluence.voicerec=true
 persist.vendor.audio.spv4.enable=false
 persist.vendor.audio.vbat.enabled=false
 ro.audio.monitorRotation=true
-ro.config.media_vol_steps=30
-ro.config.vc_call_vol_steps=9
+ro.config.alarm_vol_steps=16
+ro.config.media_vol_steps=16
+ro.config.vc_call_vol_steps=16
+ro.config.system_vol_steps=16
 ro.vendor.audio.sdk.fluencetype=fluence
 ro.vendor.qti.va_odm.support=1
 
