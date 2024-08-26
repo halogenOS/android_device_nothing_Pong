@@ -45,6 +45,7 @@ AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
 AUDIO_FEATURE_ENABLED_SSR := true
 AUDIO_FEATURE_ENABLED_SVA_MULTI_STAGE := true
 BOARD_SUPPORTS_SOUND_TRIGGER := true
+BOARD_SUPPORTS_OPENSOURCE_STHAL := true
 BOARD_USES_ALSA_AUDIO := true
 TARGET_USES_QCOM_MM_AUDIO := true
 
@@ -81,11 +82,9 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     $(CUSTOM_PRODUCT_DIR)/config/device_framework_matrix.xml
 
 DEVICE_FRAMEWORK_MANIFEST_FILE += $(DEVICE_PATH)/framework_manifest.xml
-DEVICE_MATRIX_FILE := hardware/qcom-caf/common/compatibility_matrix.xml
-DEVICE_MANIFEST_FILE := \
-    $(DEVICE_PATH)/manifest.xml \
-    hardware/qcom-caf/sm8450/audio/primary-hal/configs/common/manifest_non_qmaa.xml \
-    hardware/qcom-caf/sm8450/audio/primary-hal/configs/common/manifest_non_qmaa_extn.xml
+DEVICE_MATRIX_FILE += hardware/qcom-caf/common/compatibility_matrix.xml
+DEVICE_MANIFEST_FILE += \
+    $(DEVICE_PATH)/manifest.xml
 
 # Kernel
 BOARD_BOOTCONFIG := \
@@ -123,7 +122,7 @@ BOARD_USES_METADATA_PARTITION := true
 BOARD_USES_QCOM_HARDWARE := true
 TARGET_BOARD_PLATFORM := taro
 
-# Partitions 
+# Partitions
 BOARD_PRODUCTIMAGE_MINIMAL_PARTITION_RESERVED_SIZE := false
 BOARD_BOOTIMAGE_PARTITION_SIZE := 100663296
 BOARD_DTBOIMG_PARTITION_SIZE := 25165824
