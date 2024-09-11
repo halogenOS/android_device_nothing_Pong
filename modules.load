@@ -124,6 +124,7 @@ i2c-msm-geni.ko
 i3c-master-msm-geni.ko
 qcom_ipc_lite.ko
 synx-driver.ko
+qcom-pon.ko
 qti_battery_charger_main.ko
 qcom-spmi-temp-alarm.ko
 qti-adc-tm.ko
