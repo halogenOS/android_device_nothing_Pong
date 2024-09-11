@@ -265,6 +265,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/privapp-permissions-hotword.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp-permissions-hotword.xml
 
+PRODUCT_PACKAGES += \
+    libhidlbase_shim
+
 # IPACM
 PRODUCT_PACKAGES += \
     ipacm \
