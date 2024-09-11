@@ -40,7 +40,6 @@ msm_dma_iommu_mapping.ko
 pinctrl-waipio.ko
 qnoc-waipio.ko
 qti-fixed-regulator.ko
-reboot-mode.ko
 msm_geni_serial.ko
 nvmem_qcom-spmi-sdam.ko
 phy-generic.ko
@@ -50,7 +49,6 @@ pinctrl-cape.ko
 pinctrl-msm.ko
 proxy-consumer.ko
 qcom-dcvs.ko
-qcom-dload-mode.ko
 qcom_dma_heaps.ko
 qcom_gic_intr_routing.ko
 qcom_hwspinlock.ko
@@ -61,7 +59,6 @@ pmu_vendor.ko
 pmu_scmi.ko
 qcom-spmi-pmic.ko
 spmi-pmic-arb.ko
-qcom-reboot-reason.ko
 qcom_rpmh.ko
 qcom-scm.ko
 qnoc-qos.ko
@@ -211,7 +208,6 @@ i2c-msm-geni.ko
 i3c-master-msm-geni.ko
 qcom_ipc_lite.ko
 synx-driver.ko
-qcom-pon.ko
 qti_battery_charger_main.ko
 qcom-spmi-temp-alarm.ko
 qti-adc-tm.ko
