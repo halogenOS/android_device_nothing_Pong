@@ -355,11 +355,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     nothing-fwk
 
-# OMX
-PRODUCT_PACKAGES += \
-    libOmxCore \
-    libstagefrighthw
-
 # Overlays
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
