@@ -12,9 +12,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/nothing/Pong/device.mk)
 
 # Inherit some common Lineage stuff.
-$(call inherit-product, vendor/pixelage/config/common_full_phone.mk)
+$(call inherit-product, ${CUSTOM_PRODUCT_DIR}/config/common_full_phone.mk)
 
-PRODUCT_NAME := pixelage_Pong
+PRODUCT_NAME := aosp_Pong
 PRODUCT_DEVICE := Pong
 PRODUCT_MANUFACTURER := nothing
 PRODUCT_BRAND := Nothing

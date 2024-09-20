@@ -5,9 +5,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/pixelage_Pong.mk
+    $(LOCAL_DIR)/aosp_Pong.mk
 
 COMMON_LUNCH_CHOICES := \
-    pixelage_Pong-user \
-    pixelage_Pong-userdebug \
-    pixelage_Pong-eng
+    aosp_Pong-user \
+    aosp_Pong-userdebug \
+    aosp_Pong-eng
