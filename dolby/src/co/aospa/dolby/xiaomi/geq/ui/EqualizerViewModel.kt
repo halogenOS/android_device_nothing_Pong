@@ -94,7 +94,7 @@ class EqualizerViewModel(
 
     fun setPreset(preset: Preset) {
         dlog(TAG, "setPreset($preset)")
-        _preset.value = preset
+        this._preset.value = preset
     }
 
     fun setGain(index: Int, gain: Int) {
