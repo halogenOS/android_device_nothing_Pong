@@ -18,4 +18,6 @@
     <!-- Status Bar Brun In Protection -->
     <bool name="config_statusBarBurnInProtection">true</bool>
 
+    <item name="pixel_pitch" format="float" type="dimen">64.5</item>
+
 </resources>
