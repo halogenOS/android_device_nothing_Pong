@@ -73,6 +73,10 @@ function blob_fixup() {
         vendor/lib64/vendor.libdpmframework.so)
             ${PATCHELF} --add-needed "libhidlbase_shim.so" "${2}"
             ;;
+        /vendor/etc/seccomp_policy/wfdhdcphalservice.policy)
+            [ "$2" = "" ] && return 0
+            grep -q "gettid: 1" "${2}" || echo "gettid: 1" >> "${2}"
+            ;;
     esac
 }
 
