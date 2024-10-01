@@ -121,6 +121,8 @@ ndk::ScopedAStatus Session::getAuthenticatorId() {
     ALOGI("getAuthenticatorId: %ld", auth_id);
     mCb->onAuthenticatorIdRetrieved(auth_id);
     
+    mDevice->goodixExtCmd(mDevice, 0, 0);
+    
     return ndk::ScopedAStatus::ok();
 }
 
@@ -144,6 +146,8 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
                                           float major) {
     ALOGI("onPointerDown");
 
+    mDevice->goodixExtCmd(mDevice, 1, 0);
+
     checkSensorLockout();
 
     return ndk::ScopedAStatus::ok();
@@ -152,11 +156,15 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
 ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
     ALOGI("onPointerUp");
 
+    mDevice->goodixExtCmd(mDevice, 0, 0);
+
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus Session::onUiReady() {
     ALOGI("onUiReady");
+
+    // TODO: stub
 
     return ndk::ScopedAStatus::ok();
 }
