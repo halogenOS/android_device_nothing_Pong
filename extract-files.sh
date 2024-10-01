@@ -82,6 +82,9 @@ function blob_fixup() {
         vendor/etc/seccomp_policy/wfdhdcphalservice.policy)
             grep -q "gettid: 1" "${2}" || echo -e "\ngettid: 1" >> "${2}"
             ;;
+        vendor/bin/hw/android.hardware.keymaster@4.1-service-qti)
+            "${PATCHELF}" --replace-needed "libcrypto.so" "libcrypto-v33.so" "${2}"
+            ;;
     esac
 }
 
