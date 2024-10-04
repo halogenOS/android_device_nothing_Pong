@@ -362,6 +362,9 @@ PRODUCT_BOOT_JARS += \
     nothing-fwk
 
 # Overlays
+PRODUCT_PACKAGES += \
+    PongApertureRes \
+
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
 DEVICE_PACKAGE_OVERLAYS += \
