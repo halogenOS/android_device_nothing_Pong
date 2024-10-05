@@ -266,6 +266,7 @@ PRODUCT_COPY_FILES += \
 # Overlays
 PRODUCT_PACKAGES += \
     PongApertureRes \
+    PongDialerRes \
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
