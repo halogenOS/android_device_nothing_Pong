@@ -1,0 +1,4 @@
+runtime_resource_overlay {
+    name: "PongDialerRes",
+    system_ext_specific: true,
+}
