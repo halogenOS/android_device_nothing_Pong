@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2023 The LineageOS Project
+     Copyright (C) 2024 Paranoid Android
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
@@ -9,13 +9,12 @@
           vibrator is capable of subtle vibrations -->
      <bool name="config_vibrateOnIconAnimation">true</bool>
 
-     <!-- Color of the UDFPS Pressed view -->
-     <color name="config_udfpsColor">#24dcff</color>
+    <!-- Color of the UDFPS Pressed view -->
+    <color name="config_udfpsColor">#24dcff</color>
 
-     <!-- Allow devices override audio panel location to the left side -->
+    <!-- Allow devices override audio panel location to the left side -->
     <bool name="config_audioPanelOnLeftSide">true</bool>
-    <integer name="volume_dialog_gravity">19</integer>
-      
+
     <!-- Status Bar Brun In Protection -->
     <bool name="config_statusBarBurnInProtection">true</bool>
 
