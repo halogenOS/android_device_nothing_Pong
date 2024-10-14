@@ -10,4 +10,9 @@
          Value 21 corresponds to RIGHT|CENTER_VERTICAL. -->
     <integer name="volume_dialog_gravity">19</integer>
 
+    <!-- Maximum number of notification icons shown in the status bar (excluding overflow dot) -->
+    <integer name="max_notif_static_icons">7</integer>
+   <!-- Maximum number of notification icons shown on the lockscreen (excluding overflow dot) -->
+    <integer name="max_notif_icons_on_lockscreen">8</integer>
+
 </resources>
