@@ -161,4 +161,13 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <!-- Thermal -->
+    <hal format="aidl" optional="true">
+        <name>android.hardware.thermal</name>
+        <version>1</version>
+        <interface>
+            <name>IThermal</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
 </compatibility-matrix>
