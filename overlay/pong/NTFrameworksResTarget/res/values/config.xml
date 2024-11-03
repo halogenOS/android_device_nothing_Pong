@@ -480,6 +480,6 @@
     <string name="config_defaultListenerAccessPackages" translatable="false">co.aospa.glyph</string>
 
     <!-- Fingerprint from stock ROM -->
-    <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:12/SKQ1.230722.001/2408281751:user/release-keys</string>
+    <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:12/SKQ1.230722.001/2410161700:user/release-keys</string>
 
 </resources>
