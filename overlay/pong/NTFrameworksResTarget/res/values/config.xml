@@ -291,11 +291,10 @@
                 <string ...>M -5,0 L -5,10 L 5,10 L 5,0 Z @dp</string>
          @see https://www.w3.org/TR/SVG/paths.html#PathData
          -->
-     <string translatable="false" name="config_mainBuiltInDisplayCutout">
-          M 540,62.26
+    <string translatable="false" name="config_mainBuiltInDisplayCutout">
           M 510.85,62.26
-          A 29.15,29.15 0 1,0 569.15,62.26
-          A 29.15,29.15 0 1,0 510.85,62.26
+          a 29.15,29.15 0 1,0 58.3,0
+          a 29.15,29.15 0 1,0 -58.3,0
           Z
           @left
     </string>
@@ -306,11 +305,11 @@
          appearance of the cutout as much as possible, and may be smaller than
          config_mainBuiltInDisplayCutout
          -->
-     <string translatable="false" name="config_mainBuiltInDisplayCutoutRectApproximation">
+    <string translatable="false" name="config_mainBuiltInDisplayCutoutRectApproximation">
           M 497,0
-          H 583
-          V 93
-          H 497
+          h 86
+          v 93
+          h -86
           Z
           @left
     </string>
