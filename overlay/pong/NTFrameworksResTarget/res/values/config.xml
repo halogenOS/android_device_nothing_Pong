@@ -292,11 +292,10 @@
          @see https://www.w3.org/TR/SVG/paths.html#PathData
          -->
     <string translatable="false" name="config_mainBuiltInDisplayCutout">
-          M 510.85,62.26
+          M 0,62.26
           a 29.15,29.15 0 1,0 58.3,0
           a 29.15,29.15 0 1,0 -58.3,0
           Z
-          @left
     </string>
 
     <!-- Like config_mainBuiltInDisplayCutout, but this path is used to report the
@@ -306,12 +305,11 @@
          config_mainBuiltInDisplayCutout
          -->
     <string translatable="false" name="config_mainBuiltInDisplayCutoutRectApproximation">
-          M 497,0
+          M 0,0
           h 86
           v 93
           h -86
           Z
-          @left
     </string>
 
     <!-- Type of the udfps long press sensor. Empty if long press is not supported. -->
