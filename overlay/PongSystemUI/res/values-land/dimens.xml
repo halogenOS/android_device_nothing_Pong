@@ -15,6 +15,6 @@
     <dimen name="status_bar_padding_top">0px</dimen>
 
     <!-- Margin on the left side of the carrier text on Keyguard -->
-    <dimen name="keyguard_carrier_text_margin">80px</dimen>
+    <dimen name="keyguard_carrier_text_margin">30.5dp</dimen>
 
 </resources>
