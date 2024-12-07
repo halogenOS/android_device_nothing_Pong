@@ -479,4 +479,10 @@
     <!-- Fingerprint from stock ROM -->
     <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:12/SKQ1.240903.001/2412070124:user/release-keys</string>
 
+    <!-- Flag indicating whether the surfaceflinger has limited
+         alpha compositing functionality in hardware.  If set, the window
+         manager will disable alpha trasformation in animations where not
+         strictly needed. -->
+    <bool name="config_sf_limitedAlpha">true</bool>
+
 </resources>
