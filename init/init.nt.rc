@@ -56,11 +56,9 @@ on property:vendor.post_boot.parsed=1
     write /proc/irq/243/smp_affinity_list 2
     write /proc/irq/240/smp_affinity_list 1
 
-    # zRam
-    swapon_all /vendor/etc/fstab.zram
-
     # Setup sim restart
     start sim-restart
+    
 service sim-restart /system/bin/init.sim.restart.sh
     user root
     class main
