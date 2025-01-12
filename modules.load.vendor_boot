@@ -45,6 +45,7 @@ msm_geni_serial.ko
 nvmem_qcom-spmi-sdam.ko
 phy-generic.ko
 phy-qcom-ufs.ko
+phy-qcom-ufs-qmp-v4-waipio.ko
 phy-qcom-ufs-qmp-v4-cape.ko
 pinctrl-cape.ko
 pinctrl-msm.ko
@@ -77,6 +78,7 @@ ufshcd-crypto-qti.ko
 ufs_qcom.ko
 arm_smmu.ko
 msm-geni-se.ko
+mem-offline.ko
 qcom_aoss.ko
 msm_qmp.ko
 qcom_rimps.ko
