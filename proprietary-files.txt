@@ -735,7 +735,7 @@ vendor/lib64/libqdi.so
 vendor/lib64/libqdp.so
 
 # Diag
-system/lib64/vendor.qti.diaghal-V1-ndk.so
+system/lib64/vendor.qti.diaghal-V1-ndk.so:system_ext/lib64/vendor.qti.diaghal-V1-ndk.so
 system_ext/lib64/vendor.qti.diaghal@1.0.so
 vendor/bin/diag-router
 vendor/etc/init/vendor.qti.diag.rc
@@ -1338,7 +1338,7 @@ vendor/bin/init.qti.qcv.sh
 vendor/etc/init/init.qti.qcv.rc
 
 # QMI
-system/etc/sysconfig/qti_whitelist.xml
+system/etc/sysconfig/qti_whitelist.xml:system_ext/etc/sysconfig/system_ext_qti_whitelist.xml
 vendor/bin/irsc_util
 vendor/bin/qmipriod
 vendor/etc/init/qmipriod.rc
@@ -1816,7 +1816,7 @@ vendor/etc/wifi/vendor_cmd.xml
 vendor/etc/wifi/wpa_supplicant_overlay.conf
 
 # WiFi Display
-system/framework/WfdCommon.jar
+system/framework/WfdCommon.jar:system_ext/framework/WfdCommon.jar
 system_ext/bin/wfdservice64
 system_ext/etc/init/wfdservice.rc
 system_ext/etc/permissions/wfd-system-ext-privapp-permissions-qti.xml
