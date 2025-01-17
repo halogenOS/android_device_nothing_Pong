@@ -206,7 +206,6 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PACKAGES += \
     fstab.qcom \
-    fstab.zram \
     init.class_main.sh \
     init.nt.rc \
     init.qcom.early_boot.sh \
