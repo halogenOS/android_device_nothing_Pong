@@ -104,8 +104,7 @@ TARGET_KERNEL_CONFIG := \
     vendor/waipio_GKI.config \
     vendor/nothing/waipio_GKI.config \
     vendor/astatine-hyuganatsu.config \
-    vendor/debugfs.config \
-    ksu.config
+    vendor/debugfs.config
 
 # Kernel modules
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(DEVICE_PATH)/modules.blocklist
