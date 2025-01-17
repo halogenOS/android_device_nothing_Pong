@@ -103,7 +103,6 @@ TARGET_KERNEL_CONFIG := \
     gki_defconfig \
     vendor/waipio_GKI.config \
     vendor/nothing/waipio_GKI.config \
-    vendor/astatine-hyuganatsu.config \
     vendor/debugfs.config
 
 # Kernel modules
