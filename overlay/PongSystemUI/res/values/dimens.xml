@@ -32,4 +32,13 @@
         relies on this value will not be sized correctly. -->
     <item name="pixel_pitch" format="float" type="dimen">64.4</item>
 
+    <!-- For burn-in protection -->
+    <dimen name="status_bar_offset_max_y">2dp</dimen>
+    <dimen name="burn_in_prevention_offset_x">2dp</dimen>
+    <dimen name="burn_in_prevention_offset_y">4dp</dimen>
+    <dimen name="burn_in_prevention_offset_y_clock">16dp</dimen>
+    <dimen name="default_burn_in_prevention_offset">4dp</dimen>
+    <dimen name="udfps_burn_in_offset_x">6px</dimen>
+    <dimen name="udfps_burn_in_offset_y">8px</dimen>
+
 </resources>
