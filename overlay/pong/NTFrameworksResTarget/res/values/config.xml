@@ -119,18 +119,6 @@
        <item>-0.4376923077</item>
     </string-array>
 
-    <!-- Boolean indicating whether display white balance is supported. -->
-    <bool name="config_displayWhiteBalanceAvailable">true</bool>
-
-    <!-- Minimum color temperature, in Kelvin, supported by display white balance. -->
-    <integer name="config_displayWhiteBalanceColorTemperatureMin">4400</integer>
-
-    <!-- Maximum color temperature, in Kelvin, supported by display white balance. -->
-    <integer name="config_displayWhiteBalanceColorTemperatureMax">7794</integer>
-
-    <!-- Default color temperature, in Kelvin, used by display white balance. -->
-    <integer name="config_displayWhiteBalanceColorTemperatureDefault">6500</integer>
-
     <!-- If true, the display will be shifted around in ambient mode. -->
     <bool name="config_enableBurnInProtection">true</bool>
 
