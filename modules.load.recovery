@@ -166,7 +166,6 @@ msm_kgsl.ko
 zram.ko
 hdcp.ko
 qseecom-mod.ko
-haptic.ko
 hardware_id.ko
 secure_state.ko
 slot_status.ko
@@ -233,7 +232,6 @@ sdhci-msm.ko
 leds-qti-flash.ko
 leds-qti-tri-led.ko
 leds-qpnp-vibrator-ldo.ko
-leds-aw20036.ko
 plh_vendor.ko
 gplaf_vendor.ko
 shared_rail_vendor.ko
