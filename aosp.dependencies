@@ -7,7 +7,7 @@
     {
         "repository":   "android_kernel_nothing_sm8475",
         "target_path":  "kernel/nothing/sm8475",
-        "revision":     "XOS-15.1.2"
+        "revision":     "XOS-15.1.3"
     },
     {
         "repository":   "android_packages_apps_ParanoidGlyph",
