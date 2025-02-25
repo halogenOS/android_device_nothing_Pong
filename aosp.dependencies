@@ -2,7 +2,7 @@
     {
         "repository":   "android_vendor_nothing_Pong",
         "target_path":  "vendor/nothing/Pong",
-        "revision":     "XOS-15.1"
+        "revision":     "XOS-15.1.1"
     },
     {
         "repository":   "android_kernel_nothing_sm8475",
