@@ -13,5 +13,10 @@
         "repository":   "android_packages_apps_ParanoidGlyph",
         "target_path":  "packages/apps/ParanoidGlyph",
         "revision":     "XOS-15.1"
+    },
+    {
+        "repository":   "android_packages_apps_GlyphAdapter",
+        "target_path":	"packages/apps/GlyphAdapter",
+	"revision":	"XOS-15.1"
     }
 ]
