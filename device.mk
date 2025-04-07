@@ -37,6 +37,8 @@ PRODUCT_PACKAGES += \
     AntHalService-Soong
 
 # Audio
+$(call soong_config_set,supports_extended_compress_format,true)
+
 PRODUCT_PACKAGES += \
     android.hardware.audio@7.0-impl \
     android.hardware.audio.effect@7.0-impl \
@@ -350,7 +352,7 @@ PRODUCT_SOONG_NAMESPACES += \
     hardware/google/interfaces \
     hardware/google/pixel \
     hardware/lineage/interfaces/power-libperfmgr \
-    hardware/qcom-caf/common/libqti-perfd-client 
+    hardware/qcom-caf/common/libqti-perfd-client
 
 # Task Profiles
 PRODUCT_COPY_FILES += \
@@ -452,7 +454,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     firmware_wlanmdsp.otaupdate_symlink \
     firmware_wlan_mac.bin_symlink \
-    firmware_WCNSS_qcom_cfg.ini_symlink 
+    firmware_WCNSS_qcom_cfg.ini_symlink
 
 # WiFi Display
 PRODUCT_BOOT_JARS += \
