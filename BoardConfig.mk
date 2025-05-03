@@ -107,10 +107,6 @@ BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVIC
 BOOT_KERNEL_MODULES := $(strip $(shell cat $(DEVICE_PATH)/modules.load.recovery))
 TARGET_MODULE_ALIASES += qca6490.ko:qca_cld3_qca6490.ko
 
-# Lineage Health
-TARGET_HEALTH_CHARGING_CONTROL_CHARGING_PATH := /sys/class/qcom-battery/scenario_fcc
-TARGET_HEALTH_CHARGING_CONTROL_CHARGING_ENABLED := 9000
-
 # Metadata
 BOARD_USES_METADATA_PARTITION := true
 
