@@ -31,7 +31,7 @@ on boot
     chown system system /sys/class/leds/vibrator/duration
     chown system system /sys/class/leds/vibrator/state
 
-on post-fs-data                                                                 
+on post-fs-data
     # Enable WLAN SSR
     write /sys/kernel/cnss/recovery 1
 
@@ -42,10 +42,10 @@ on property:sys.boot_completed=1
     # OTG
     chown system system /proc/charger/nt_otg_enable
     write /proc/charger/nt_otg_enable 4
-    
+
     # Enable PowerHAL hint processing
     setprop vendor.powerhal.init 1
-    
+
 on property:vendor.post_boot.parsed=1
     # Kill WALT CPU input boost
     write /proc/sys/walt/input_boost/input_boost_freq "0 0 0 0 0 0 0"
@@ -55,7 +55,7 @@ on property:vendor.post_boot.parsed=1
     # IRQ 240: kgsl_3d0_irq
     write /proc/irq/243/smp_affinity_list 2
     write /proc/irq/240/smp_affinity_list 1
- 
+
 on property:vendor.post_boot.parsed=1
     # Kill WALT CPU input boost
     write /proc/sys/walt/input_boost/input_boost_freq "0 0 0 0 0 0 0"
@@ -64,7 +64,7 @@ on property:vendor.post_boot.parsed=1
     # dex2oat
     setprop dalvik.vm.dex2oat-cpu-set 0,1,2,3,4,5,6
     setprop dalvik.vm.dex2oat-threads 6
-    
+
     # IRQ Tuning
     # IRQ 243: msm_drm -> CPU 7
     # IRQ 240: kgsl_3d0_irq -> CPU 6
