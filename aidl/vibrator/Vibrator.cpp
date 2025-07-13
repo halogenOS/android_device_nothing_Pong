@@ -354,10 +354,12 @@ int LedVibratorDevice::write_value(const char *file, const char *value) {
     int fd;
     int ret;
     int val = 80;
+    std::string strValue;
 
     if (!strcmp(file, LED_DEVICE "/gain")) {
         val = mLevel * strtoul(value, NULL, 0) / 3;
-	value = std::to_string(val).c_str();
+            strValue = std::to_string(val);
+        value = strValue.c_str();
     }
 
     fd = TEMP_FAILURE_RETRY(open(file, O_WRONLY));
@@ -414,7 +416,7 @@ int LedVibratorDevice::setAmplitude(float amplitude) {
     int gain = 0;
 
     mLevel = amplitude * 3;
-    
+
     if (mTimeoutMs < 10) {
         gain = 25 + 4 * mTimeoutMs;  // Small but noticeable tap
     } else if (mTimeoutMs < 30) {
