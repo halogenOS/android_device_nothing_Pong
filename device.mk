@@ -277,6 +277,11 @@ PRODUCT_PACKAGES += \
 # Project ID Quota
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
+# Glyph
+PRODUCT_PACKAGES += \
+    ParanoidGlyphPhone2 \
+    GlyphAdapter
+
 # Partitions
 PRODUCT_PACKAGES += \
     vendor_bt_firmware_mountpoint \
