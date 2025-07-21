@@ -378,7 +378,7 @@
     <integer name="config_num_physical_slots">2</integer>
 
     <!-- Colon separated list of package names that should be granted Notification Listener access -->
-    <string name="config_defaultListenerAccessPackages" translatable="false">org.aospa.glyph</string>
+    <string name="config_defaultListenerAccessPackages" translatable="false">co.aospa.glyph</string>
 
     <!-- Type of the tap sensor. Empty if tap is not supported. -->
     <string name="config_dozeTapSensorType" translatable="false">org.lineageos.sensor.single_touch</string>
