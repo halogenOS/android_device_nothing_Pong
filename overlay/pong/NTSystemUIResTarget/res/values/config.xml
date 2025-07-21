@@ -12,4 +12,9 @@
     <!-- Color of the UDFPS Pressed view -->
     <color name="config_udfpsColor">#ffffe6</color>
 
+    <bool name="config_haveHigherAspectRatioScreen">true</bool>
+
+    <!-- Whether the device supports wireless charging or not -->
+    <bool name="config_deviceSupportsWirelessCharging">true</bool>
+
 </resources>
