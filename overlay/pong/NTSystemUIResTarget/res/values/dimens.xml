@@ -22,4 +22,9 @@
         relies on this value will not be sized correctly. -->
     <item name="pixel_pitch" format="float" type="dimen">64.4</item>
 
+    <!-- The position of the volume dialog on the screen.
+         See com.android.systemui.volume.VolumeDialogImpl.
+         Value 19 corresponds to LEFT|CENTER_VERTICAL. -->
+    <integer name="volume_dialog_gravity">19</integer>
+
 </resources>
