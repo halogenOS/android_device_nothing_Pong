@@ -350,4 +350,7 @@
          empty string is passed in -->
     <string translatable="false" name="config_wlan_network_service_package">vendor.qti.iwlan</string>
 
+    <bool name="config_supportsMicToggle">true</bool>
+    <bool name="config_supportsCamToggle">true</bool>
+
 </resources>
