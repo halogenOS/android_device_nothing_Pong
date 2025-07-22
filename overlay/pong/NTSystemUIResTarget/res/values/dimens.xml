@@ -27,4 +27,13 @@
          Value 19 corresponds to LEFT|CENTER_VERTICAL. -->
     <integer name="volume_dialog_gravity">19</integer>
 
+    <!-- For burn-in protection -->
+    <dimen name="status_bar_offset_max_y">2dp</dimen>
+    <dimen name="burn_in_prevention_offset_x">2dp</dimen>
+    <dimen name="burn_in_prevention_offset_y">4dp</dimen>
+    <dimen name="burn_in_prevention_offset_y_clock">16dp</dimen>
+    <dimen name="default_burn_in_prevention_offset">4dp</dimen>
+    <dimen name="udfps_burn_in_offset_x">6px</dimen>
+    <dimen name="udfps_burn_in_offset_y">8px</dimen>
+
 </resources>
