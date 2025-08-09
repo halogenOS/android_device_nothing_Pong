@@ -495,7 +495,4 @@
         <item>93</item>  <!-- <item>sensorRadius</item> -->
     </integer-array>
 
-    <!-- Whether to enable fingerprint unlock when screen turns off on udfps devices -->
-    <bool name="config_screen_off_udfps_enabled">true</bool>
-
 </resources>
