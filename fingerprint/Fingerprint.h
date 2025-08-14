@@ -7,6 +7,7 @@
 #pragma once
 
 #include <aidl/android/hardware/biometrics/fingerprint/BnFingerprint.h>
+#include "thread/WorkerThread.h"
 
 #include "LockoutTracker.h"
 #include "Session.h"
@@ -40,6 +41,7 @@ private:
     LockoutTracker mLockoutTracker;
     FingerprintSensorType mSensorType;
     int mMaxEnrollmentsPerUser;
+    WorkerThread mWorker;
 
     fingerprint_device_t* mDevice;
 };

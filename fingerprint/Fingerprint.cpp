@@ -25,6 +25,7 @@ namespace fingerprint {
 
 namespace {
 constexpr int SENSOR_ID = 0;
+constexpr size_t WORKER_QUEUE_SIZE = 5;
 constexpr common::SensorStrength SENSOR_STRENGTH = common::SensorStrength::STRONG;
 constexpr int MAX_ENROLLMENTS_PER_USER = 4;
 constexpr char HW_COMPONENT_ID[] = "fingerprintSensor";
@@ -37,10 +38,12 @@ constexpr char SW_VERSION[] = "vendor/version/revision";
 
 static Fingerprint* sInstance;
 
-Fingerprint::Fingerprint()     
-    : mDevice(nullptr),
+Fingerprint::Fingerprint()
+    : mLockoutTracker(),
+      mSensorType(FingerprintSensorType::UNKNOWN),
       mMaxEnrollmentsPerUser(MAX_ENROLLMENTS_PER_USER),
-      mSensorType(FingerprintSensorType::UNKNOWN) {
+      mWorker(WORKER_QUEUE_SIZE),
+      mDevice(nullptr) {
 
     sInstance = this; // keep track of the most recent instance
 
@@ -172,7 +175,7 @@ ndk::ScopedAStatus Fingerprint::createSession(int32_t /*sensorId*/, int32_t user
                                               std::shared_ptr<ISession>* out) {
     CHECK(mSession == nullptr || mSession->isClosed()) << "Open session already exists!";
  
-    mSession = SharedRefBase::make<Session>(mDevice, userId, cb, mLockoutTracker);
+    mSession = SharedRefBase::make<Session>(mDevice, userId, cb, mLockoutTracker, &mWorker);
     *out = mSession;
 
     mSession->linkToDeath(cb->asBinder().get());

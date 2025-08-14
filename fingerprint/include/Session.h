@@ -14,6 +14,7 @@
 #include <log/log.h>
 
 #include "LockoutTracker.h"
+#include "thread/WorkerThread.h"
 
 using ::aidl::android::hardware::biometrics::common::ICancellationSignal;
 using ::aidl::android::hardware::biometrics::common::OperationContext;
@@ -31,7 +32,9 @@ void onClientDeath(void* cookie);
 class Session : public BnSession {
 public:
     Session(fingerprint_device_t* device, int32_t userId,
-            std::shared_ptr<ISessionCallback> cb, LockoutTracker lockoutTracker);
+            std::shared_ptr<ISessionCallback> cb, LockoutTracker lockoutTracker,
+            WorkerThread* worker);
+
     ndk::ScopedAStatus generateChallenge() override;
     ndk::ScopedAStatus revokeChallenge(int64_t challenge) override;
     ndk::ScopedAStatus enroll(const HardwareAuthToken& hat,
@@ -73,9 +76,10 @@ public:
 private:
     fingerprint_device_t* mDevice;
     LockoutTracker mLockoutTracker;
+    WorkerThread* mWorker;
+
     bool mClosed = false;
 
-    //static ndk::ScopedAStatus ErrorFilter(int32_t error);
     static Error VendorErrorFilter(int32_t error, int32_t* vendorCode);
     static AcquiredInfo VendorAcquiredFilter(int32_t info, int32_t* vendorCode);
 
@@ -98,6 +102,9 @@ private:
 
     // Binder death handler.
     AIBinder_DeathRecipient* mDeathRecipient;
+
+    // UI-ready gate for UDFPS arming
+    std::atomic<bool> mUiReady{false};
 };
 
 } // namespace fingerprint
