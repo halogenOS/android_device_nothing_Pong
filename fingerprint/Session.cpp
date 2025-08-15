@@ -6,6 +6,8 @@
  */
 
 #include <thread>
+#include <chrono>
+#include <atomic>
 
 #include <android-base/file.h>
 #include <android-base/stringprintf.h>
@@ -27,6 +29,15 @@ static inline void setFodHbm(bool status) {
     ::android::base::WriteStringToFile(status ? "1" : "0", FOD_HBM_PATH);
 }
 
+static inline int64_t now_ms() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+               std::chrono::steady_clock::now().time_since_epoch())
+        .count();
+}
+
+static std::atomic<uint64_t> gSeq{0};
+static inline uint64_t nextSeq() { return ++gSeq; }
+
 void onClientDeath(void* cookie) {
     ALOGI("FingerprintService has died");
     Session* session = static_cast<Session*>(cookie);
@@ -47,7 +58,10 @@ Session::Session(fingerprint_device_t* device, int32_t userId,
 }
 
 ndk::ScopedAStatus Session::generateChallenge() {
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("generateChallenge() queueDelay=%lldms", (long long)(ts - tq));
         uint64_t challenge = mDevice->pre_enroll(mDevice);
         ALOGI("generateChallenge: %ld", challenge);
         mCb->onChallengeGenerated(challenge);
@@ -56,9 +70,13 @@ ndk::ScopedAStatus Session::generateChallenge() {
 }
 
 ndk::ScopedAStatus Session::revokeChallenge(int64_t challenge) {
-    mWorker->schedule(Callable::from([this, challenge] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, challenge, tq] {
+        int64_t ts = now_ms();
+        ALOGD("revokeChallenge() queueDelay=%lldms", (long long)(ts - tq));
         ALOGI("revokeChallenge: %ld", challenge);
         setFodHbm(false);
+        ALOGD("goodixExtCmd(UP)");
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mDevice->post_enroll(mDevice);
         mCb->onChallengeRevoked(challenge);
@@ -69,14 +87,19 @@ ndk::ScopedAStatus Session::revokeChallenge(int64_t challenge) {
 ndk::ScopedAStatus Session::enroll(const HardwareAuthToken& hat,
                                    std::shared_ptr<ICancellationSignal>* out) {
     ALOGI("enroll");
-    mWorker->schedule(Callable::from([this, hat] {
+    int64_t tq = now_ms();
+    uint64_t seq = nextSeq();
+    mWorker->schedule(Callable::from([this, hat, tq, seq] {
+        int64_t ts = now_ms();
+        ALOGD("[seq=%llu] enroll queueDelay=%lldms", (unsigned long long)seq, (long long)(ts - tq));
         hw_auth_token_t authToken;
         translate(hat, authToken);
         int error = mDevice->enroll(mDevice, &authToken, mUserId, 60);
         if (error) {
-            ALOGE("enroll failed: %d", error);
+            ALOGE("[seq=%llu] enroll failed: %d", (unsigned long long)seq, error);
             mCb->onError(Error::UNABLE_TO_PROCESS, error);
         } else {
+            ALOGD("[seq=%llu] setFodHbm(true)", (unsigned long long)seq);
             setFodHbm(true);
         }
     }));
@@ -88,15 +111,20 @@ ndk::ScopedAStatus Session::enroll(const HardwareAuthToken& hat,
 ndk::ScopedAStatus Session::authenticate(int64_t operationId,
                                          std::shared_ptr<ICancellationSignal>* out) {
     ALOGI("authenticate");
-    // start each auth fresh
     mUiReady = false;
+    int64_t tq = now_ms();
+    uint64_t seq = nextSeq();
 
-    mWorker->schedule(Callable::from([this, operationId] {
+    mWorker->schedule(Callable::from([this, operationId, tq, seq] {
+        int64_t ts = now_ms();
+        ALOGD("[seq=%llu] authenticate queueDelay=%lldms opId=%lld",
+              (unsigned long long)seq, (long long)(ts - tq), (long long)operationId);
         int error = mDevice->authenticate(mDevice, operationId, mUserId);
         if (error) {
-            ALOGE("authenticate failed: %d", error);
+            ALOGE("[seq=%llu] authenticate failed: %d", (unsigned long long)seq, error);
             mCb->onError(Error::UNABLE_TO_PROCESS, error);
         } else {
+            ALOGD("[seq=%llu] setFodHbm(true)", (unsigned long long)seq);
             setFodHbm(true);
         }
     }));
@@ -107,7 +135,10 @@ ndk::ScopedAStatus Session::authenticate(int64_t operationId,
 
 ndk::ScopedAStatus Session::detectInteraction(std::shared_ptr<ICancellationSignal>* out) {
     ALOGI("detectInteraction");
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("detectInteraction queueDelay=%lldms", (long long)(ts - tq));
         ALOGD("Detect interaction is not supported");
         mCb->onError(Error::UNABLE_TO_PROCESS, 0 /* vendorCode */);
     }));
@@ -117,7 +148,10 @@ ndk::ScopedAStatus Session::detectInteraction(std::shared_ptr<ICancellationSigna
 
 ndk::ScopedAStatus Session::enumerateEnrollments() {
     ALOGI("enumerateEnrollments");
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("enumerateEnrollments queueDelay=%lldms", (long long)(ts - tq));
         int error = mDevice->enumerate(mDevice);
         if (error) {
             ALOGE("enumerate failed: %d", error);
@@ -128,7 +162,10 @@ ndk::ScopedAStatus Session::enumerateEnrollments() {
 
 ndk::ScopedAStatus Session::removeEnrollments(const std::vector<int32_t>& enrollmentIds) {
     ALOGI("removeEnrollments, size: %zu", enrollmentIds.size());
-    mWorker->schedule(Callable::from([this, enrollmentIds] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, enrollmentIds, tq] {
+        int64_t ts = now_ms();
+        ALOGD("removeEnrollments queueDelay=%lldms", (long long)(ts - tq));
         for (int32_t fid : enrollmentIds) {
             int error = mDevice->remove(mDevice, mUserId, fid);
             if (error) {
@@ -140,17 +177,24 @@ ndk::ScopedAStatus Session::removeEnrollments(const std::vector<int32_t>& enroll
 }
 
 ndk::ScopedAStatus Session::getAuthenticatorId() {
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("getAuthenticatorId queueDelay=%lldms", (long long)(ts - tq));
         uint64_t auth_id = mDevice->get_authenticator_id(mDevice);
         ALOGI("getAuthenticatorId: %ld", auth_id);
         mCb->onAuthenticatorIdRetrieved(auth_id);
+        ALOGD("goodixExtCmd(UP)");
         mDevice->goodixExtCmd(mDevice, 0, 0);
     }));
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus Session::invalidateAuthenticatorId() {
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("invalidateAuthenticatorId queueDelay=%lldms", (long long)(ts - tq));
         uint64_t auth_id = mDevice->get_authenticator_id(mDevice);
         ALOGI("invalidateAuthenticatorId: %ld", auth_id);
         mCb->onAuthenticatorIdInvalidated(auth_id);
@@ -160,7 +204,10 @@ ndk::ScopedAStatus Session::invalidateAuthenticatorId() {
 
 ndk::ScopedAStatus Session::resetLockout(const HardwareAuthToken& /*hat*/) {
     ALOGI("resetLockout");
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("resetLockout queueDelay=%lldms", (long long)(ts - tq));
         clearLockout(true);
         mIsLockoutTimerAborted = true;
     }));
@@ -170,13 +217,22 @@ ndk::ScopedAStatus Session::resetLockout(const HardwareAuthToken& /*hat*/) {
 ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int32_t y, float minor,
                                           float major) {
     ALOGI("onPointerDown");
-    mWorker->schedule(Callable::from([this, x, y, minor, major] {
-        // wait briefly until UI overlay/HBM is ready
+    int64_t tq = now_ms();
+    uint64_t seq = nextSeq();
+    mWorker->schedule(Callable::from([this, x, y, minor, major, tq, seq] {
+        int64_t ts = now_ms();
+        ALOGD("[seq=%llu] onPointerDown queueDelay=%lldms mUiReady=%d",
+              (unsigned long long)seq, (long long)(ts - tq), (int)mUiReady.load());
+        int64_t ws = now_ms();
         {
             std::unique_lock<std::mutex> lk(mUiMutex);
-            (void)mUiCv.wait_for(lk, std::chrono::milliseconds(400),
-                                 [this]{ return mUiReady.load(); });
+            bool ready = mUiCv.wait_for(lk, std::chrono::milliseconds(400),
+                                        [this]{ return mUiReady.load(); });
+            int64_t we = now_ms();
+            ALOGD("[seq=%llu] onPointerDown wait ready=%d waited=%lldms",
+                  (unsigned long long)seq, (int)ready, (long long)(we - ws));
         }
+        ALOGD("[seq=%llu] goodixExtCmd(DOWN)", (unsigned long long)seq);
         mDevice->goodixExtCmd(mDevice, 1, 0);
         checkSensorLockout();
     }));
@@ -185,7 +241,12 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
 
 ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
     ALOGI("onPointerUp");
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    uint64_t seq = nextSeq();
+    mWorker->schedule(Callable::from([this, tq, seq] {
+        int64_t ts = now_ms();
+        ALOGD("[seq=%llu] onPointerUp queueDelay=%lldms", (unsigned long long)seq, (long long)(ts - tq));
+        ALOGD("[seq=%llu] goodixExtCmd(UP)", (unsigned long long)seq);
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;              // reset gate after touch ends
         mUiCv.notify_all();
@@ -195,11 +256,16 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 
 ndk::ScopedAStatus Session::onUiReady() {
     ALOGI("onUiReady");
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("onUiReady queueDelay=%lldms", (long long)(ts - tq));
+        bool prev = mUiReady.load();
         {
             std::lock_guard<std::mutex> lk(mUiMutex);
             mUiReady = true;           // mark overlay/HBM ready; no Goodix call here
         }
+        ALOGD("onUiReady set mUiReady=true (was %d), notifying", (int)prev);
         mUiCv.notify_all();
     }));
     return ndk::ScopedAStatus::ok();
@@ -245,8 +311,13 @@ ndk::ScopedAStatus Session::setIgnoreDisplayTouches(bool /*shouldIgnore*/) {
 
 ndk::ScopedAStatus Session::cancel() {
     ALOGI("cancel");
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    uint64_t seq = nextSeq();
+    mWorker->schedule(Callable::from([this, tq, seq] {
+        int64_t ts = now_ms();
+        ALOGD("[seq=%llu] cancel queueDelay=%lldms", (unsigned long long)seq, (long long)(ts - tq));
         setFodHbm(false);
+        ALOGD("[seq=%llu] goodixExtCmd(UP)", (unsigned long long)seq);
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;              // ensure next auth starts clean
         mUiCv.notify_all();
@@ -260,8 +331,12 @@ ndk::ScopedAStatus Session::cancel() {
 
 ndk::ScopedAStatus Session::close() {
     ALOGI("close");
-    mWorker->schedule(Callable::from([this] {
+    int64_t tq = now_ms();
+    mWorker->schedule(Callable::from([this, tq] {
+        int64_t ts = now_ms();
+        ALOGD("close queueDelay=%lldms", (long long)(ts - tq));
         setFodHbm(false);
+        ALOGD("goodixExtCmd(UP)");
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;
         mUiCv.notify_all();
@@ -345,6 +420,7 @@ bool Session::checkSensorLockout() {
 
     if (lockoutMode != LockoutMode::NONE) {
         setFodHbm(false);
+        ALOGD("goodixExtCmd(UP) due to lockout");
         mDevice->goodixExtCmd(mDevice, 0, 0);
     }
 
@@ -390,11 +466,12 @@ void Session::lockoutTimerExpired() {
 }
 
 void Session::notify(const fingerprint_msg_t* msg) {
+    int64_t t = now_ms();
     switch (msg->type) {
         case FINGERPRINT_ERROR: {
             int32_t vendorCode = 0;
             Error result = VendorErrorFilter(msg->data.error, &vendorCode);
-            ALOGD("onError(%hhd, %d)", result, vendorCode);
+            ALOGD("notify(ERROR) t=%lld result=%hhd vendor=%d", (long long)t, result, vendorCode);
             mCb->onError(result, vendorCode);
             mUiReady = false;         // reset gate on any terminal error
             mUiCv.notify_all();
@@ -404,29 +481,34 @@ void Session::notify(const fingerprint_msg_t* msg) {
             AcquiredInfo result =
                     VendorAcquiredFilter(msg->data.acquired.acquired_info, &vendorCode);
             if (result != AcquiredInfo::VENDOR) {
-                ALOGD("onAcquired(%d, %d)", result, vendorCode);
+                ALOGD("notify(ACQUIRED) t=%lld result=%d vendor=%d", (long long)t, result, vendorCode);
                 mCb->onAcquired(result, vendorCode);
             } else {
-                ALOGW("onAcquired(AcquiredInfo::VENDOR, %d)", vendorCode);
-                // Do not send onAcquired or illumination will be turned off prematurely
+                ALOGW("notify(ACQUIRED VENDOR) t=%lld vendor=%d", (long long)t, vendorCode);
             }
         } break;
         case FINGERPRINT_TEMPLATE_ENROLLING: {
-            ALOGD("onEnrollResult(fid=%d, gid=%d, rem=%d)", msg->data.enroll.finger.fid,
-                  msg->data.enroll.finger.gid, msg->data.enroll.samples_remaining);
+            ALOGD("notify(ENROLLING) t=%lld fid=%d gid=%d rem=%d",
+                  (long long)t, msg->data.enroll.finger.fid,
+                  msg->data.enroll.finger.gid,
+                  msg->data.enroll.samples_remaining);
             mCb->onEnrollmentProgress(msg->data.enroll.finger.fid,
                                       msg->data.enroll.samples_remaining);
         } break;
         case FINGERPRINT_TEMPLATE_REMOVED: {
-            ALOGD("onRemove(fid=%d, gid=%d, rem=%d)", msg->data.removed.finger.fid,
-                  msg->data.removed.finger.gid, msg->data.removed.remaining_templates);
+            ALOGD("notify(REMOVED) t=%lld fid=%d gid=%d rem=%d",
+                  (long long)t, msg->data.removed.finger.fid,
+                  msg->data.removed.finger.gid,
+                  msg->data.removed.remaining_templates);
             std::vector<int> enrollments;
             enrollments.push_back(msg->data.removed.finger.fid);
             mCb->onEnrollmentsRemoved(enrollments);
         } break;
         case FINGERPRINT_AUTHENTICATED: {
-            ALOGD("onAuthenticated(fid=%d, gid=%d)", msg->data.authenticated.finger.fid,
-                msg->data.authenticated.finger.gid);
+            ALOGD("notify(AUTH) t=%lld fid=%d gid=%d",
+                  (long long)t,
+                  msg->data.authenticated.finger.fid,
+                  msg->data.authenticated.finger.gid);
             if (msg->data.authenticated.finger.fid != 0) {
                 const hw_auth_token_t hat = msg->data.authenticated.hat;
                 HardwareAuthToken authToken;
@@ -435,6 +517,7 @@ void Session::notify(const fingerprint_msg_t* msg) {
                 mCb->onAuthenticationSucceeded(msg->data.authenticated.finger.fid, authToken);
                 mLockoutTracker.reset(true);
                 setFodHbm(false);
+                ALOGD("goodixExtCmd(UP) after success");
                 mDevice->goodixExtCmd(mDevice, 0, 0);
             } else {
                 mCb->onAuthenticationFailed();
@@ -445,8 +528,11 @@ void Session::notify(const fingerprint_msg_t* msg) {
             mUiCv.notify_all();
         } break;
         case FINGERPRINT_TEMPLATE_ENUMERATING: {
-            ALOGD("onEnumerate(fid=%d, gid=%d, rem=%d)", msg->data.enumerated.finger.fid,
-                  msg->data.enumerated.finger.gid, msg->data.enumerated.remaining_templates);
+            ALOGD("notify(ENUM) t=%lld fid=%d gid=%d rem=%d",
+                  (long long)t,
+                  msg->data.enumerated.finger.fid,
+                  msg->data.enumerated.finger.gid,
+                  msg->data.enumerated.remaining_templates);
             static std::vector<int> enrollments;
             enrollments.push_back(msg->data.enumerated.finger.fid);
             if (msg->data.enumerated.remaining_templates == 0) {
