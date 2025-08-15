@@ -188,6 +188,7 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
     mWorker->schedule(Callable::from([this] {
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;              // reset gate after touch ends
+        mUiCv.notify_all();
     }));
     return ndk::ScopedAStatus::ok();
 }
@@ -248,6 +249,7 @@ ndk::ScopedAStatus Session::cancel() {
         setFodHbm(false);
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;              // ensure next auth starts clean
+        mUiCv.notify_all();
         int ret = mDevice->cancel(mDevice);
         if (ret == 0) {
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
@@ -262,6 +264,7 @@ ndk::ScopedAStatus Session::close() {
         setFodHbm(false);
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;
+        mUiCv.notify_all();
     }));
     mClosed = true;
     mCb->onSessionClosed();
@@ -394,6 +397,7 @@ void Session::notify(const fingerprint_msg_t* msg) {
             ALOGD("onError(%hhd, %d)", result, vendorCode);
             mCb->onError(result, vendorCode);
             mUiReady = false;         // reset gate on any terminal error
+            mUiCv.notify_all();
         } break;
         case FINGERPRINT_ACQUIRED: {
             int32_t vendorCode = 0;
@@ -438,6 +442,7 @@ void Session::notify(const fingerprint_msg_t* msg) {
                 checkSensorLockout();
             }
             mUiReady = false;         // reset after success or fail
+            mUiCv.notify_all();
         } break;
         case FINGERPRINT_TEMPLATE_ENUMERATING: {
             ALOGD("onEnumerate(fid=%d, gid=%d, rem=%d)", msg->data.enumerated.finger.fid,
