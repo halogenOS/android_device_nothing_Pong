@@ -195,6 +195,7 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 
 ndk::ScopedAStatus Session::onUiReady() {
     ALOGI("onUiReady");
+    setFodHbm(true);
     {
         std::lock_guard<std::mutex> lk(mUiMutex);
         mUiReady = true;           // mark overlay/HBM ready; no Goodix call here
