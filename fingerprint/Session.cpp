@@ -195,13 +195,11 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 
 ndk::ScopedAStatus Session::onUiReady() {
     ALOGI("onUiReady");
-    mWorker->schedule(Callable::from([this] {
-        {
-            std::lock_guard<std::mutex> lk(mUiMutex);
-            mUiReady = true;           // mark overlay/HBM ready; no Goodix call here
-        }
-        mUiCv.notify_all();
-    }));
+    {
+        std::lock_guard<std::mutex> lk(mUiMutex);
+        mUiReady = true;           // mark overlay/HBM ready; no Goodix call here
+    }
+    mUiCv.notify_all();
     return ndk::ScopedAStatus::ok();
 }
 
