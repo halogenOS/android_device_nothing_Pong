@@ -11,6 +11,9 @@ cc_binary {
     init_rc: ["android.hardware.biometrics.fingerprint-service.nothing.rc"],
     vintf_fragments: ["android.hardware.biometrics.fingerprint-service.nothing.xml"],
     local_include_dirs: ["include"],
+    cflags: [
+        "-O3",
+    ],
     srcs: [
         "CancellationSignal.cpp",
         "Fingerprint.cpp",
@@ -32,6 +35,7 @@ cc_binary {
         "android.hardware.biometrics.common.config",
     ],
     static_libs: ["libandroid.hardware.biometrics.fingerprint.NothingProps"],
+    lto: { thin: true },
 }
 
 sysprop_library {
