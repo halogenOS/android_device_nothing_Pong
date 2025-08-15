@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2024 The LineageOS Project
+ * Copyright (C) 2025 The halogenOS Project
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -12,6 +13,8 @@
 #include "fingerprint.h"
 #include <hardware/hardware.h>
 #include <log/log.h>
+#include <condition_variable>
+#include <mutex>
 
 #include "LockoutTracker.h"
 #include "thread/WorkerThread.h"
@@ -105,6 +108,9 @@ private:
 
     // UI-ready gate for UDFPS arming
     std::atomic<bool> mUiReady{false};
+
+    std::condition_variable mUiCv;
+    std::mutex mUiMutex;
 };
 
 } // namespace fingerprint
@@ -112,3 +118,4 @@ private:
 } // namespace hardware
 } // namespace android
 } // namespace aidl
+

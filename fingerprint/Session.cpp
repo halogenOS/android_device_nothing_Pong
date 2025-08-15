@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2024 The LineageOS Project
+ * Copyright (C) 2025 The halogenOS Project
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -171,8 +172,10 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
     ALOGI("onPointerDown");
     mWorker->schedule(Callable::from([this, x, y, minor, major] {
         // wait briefly until UI overlay/HBM is ready
-        for (int i = 0; i < 40 && !mUiReady.load(); ++i) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        {
+            std::unique_lock<std::mutex> lk(mUiMutex);
+            (void)mUiCv.wait_for(lk, std::chrono::milliseconds(400),
+                                 [this]{ return mUiReady.load(); });
         }
         mDevice->goodixExtCmd(mDevice, 1, 0);
         checkSensorLockout();
@@ -192,7 +195,11 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 ndk::ScopedAStatus Session::onUiReady() {
     ALOGI("onUiReady");
     mWorker->schedule(Callable::from([this] {
-        mUiReady = true;               // mark overlay/HBM ready; no Goodix call here
+        {
+            std::lock_guard<std::mutex> lk(mUiMutex);
+            mUiReady = true;           // mark overlay/HBM ready; no Goodix call here
+        }
+        mUiCv.notify_all();
     }));
     return ndk::ScopedAStatus::ok();
 }
@@ -450,3 +457,4 @@ void Session::notify(const fingerprint_msg_t* msg) {
 } // namespace hardware
 } // namespace android
 } // namespace aidl
+
