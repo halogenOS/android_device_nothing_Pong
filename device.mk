@@ -144,6 +144,7 @@ $(call soong_config_set,surfaceflinger,udfps_lib,//$(LOCAL_PATH):libudfps_extens
 
 # Fastboot
 PRODUCT_PACKAGES += \
+    android.hardware.fastboot-service.example_recovery \
     fastbootd
 
 # Generic ramdisk
@@ -187,6 +188,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     fstab.qcom \
     init.class_main.sh \
+    init.kernel.post_boot.sh \
+    init.nt.hw.rc \
+    init.nt.hw.rc.recovery \
     init.nt.rc \
     init.qcom.early_boot.sh \
     init.qcom.rc \
@@ -331,6 +335,13 @@ PRODUCT_COPY_FILES += \
 # Shipping API
 BOARD_SHIPPING_API_LEVEL := 33
 PRODUCT_SHIPPING_API_LEVEL := $(BOARD_SHIPPING_API_LEVEL)
+
+# Sku properties
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/sku/build_CAPE.prop:$(TARGET_COPY_OUT_ODM)/etc/build_CAPE.prop \
+    $(LOCAL_PATH)/sku/build_EEA.prop:$(TARGET_COPY_OUT_ODM)/etc/build_EEA.prop \
+    $(LOCAL_PATH)/sku/build_IND.prop:$(TARGET_COPY_OUT_ODM)/etc/build_IND.prop \
+    $(LOCAL_PATH)/sku/build_ROW.prop:$(TARGET_COPY_OUT_ODM)/etc/build_ROW.prop
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
