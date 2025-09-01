@@ -45,7 +45,6 @@ PRODUCT_PACKAGES += \
     audioadsprpcd \
     libagm_compress_plugin \
     libagm_mixer_plugin \
-    libagmmixer \
     libagm_pcm_plugin \
     libbatterylistener \
     libfmpal \
@@ -270,10 +269,6 @@ PRODUCT_PACKAGES += \
     NTSystemUIResTarget \
     NTWifiResMainlineTarget \
     NTWifiResTarget
-
-# NCM overlays
-PRODUCT_PACKAGES += \
-    NcmTetheringOverlay
 
 # Project ID Quota
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
