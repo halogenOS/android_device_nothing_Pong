@@ -6,4 +6,5 @@
 (typeattributeset new_objects
   ( new_objects
     glyph_app
-    system_fingerprint_prop))
+    system_fingerprint_prop
+    sltntc))
