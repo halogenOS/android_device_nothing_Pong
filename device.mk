@@ -337,7 +337,9 @@ PRODUCT_COPY_FILES += \
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH)
+    $(LOCAL_PATH) \
+    packages/apps/ParanoidGlyph \
+    packages/apps/GlyphAdapter
 
 # Telephony
 PRODUCT_PACKAGES += \
