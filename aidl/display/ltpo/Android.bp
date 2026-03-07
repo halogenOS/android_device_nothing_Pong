@@ -1,0 +1,16 @@
+cc_binary {
+    name: "custom.hardware.display.ltpo-service.pong",
+    relative_install_path: "hw",
+    vendor: true,
+    init_rc: ["custom.hardware.display.ltpo-service.pong.rc"],
+    vintf_fragments: ["custom.hardware.display.ltpo-service.pong.xml"],
+    srcs: [
+        "service.cpp",
+        "LtpoControl.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+        "libbinder_ndk",
+        "custom.hardware.display.ltpo-V2-ndk",
+    ],
+}

@@ -1,2 +1,5 @@
+# Display
+system_public_prop(sfm_prop)
+
 # Fingerprint
 vendor_internal_prop(system_fingerprint_prop)

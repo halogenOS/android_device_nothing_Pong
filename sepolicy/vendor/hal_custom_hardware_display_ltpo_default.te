@@ -1,0 +1,9 @@
+# LTPO Control HAL - device-specific sysfs access
+binder_use(hal_custom_hardware_display_ltpo_default)
+
+# Write to /sys/panel_feature/skip_frame_mode
+allow hal_custom_hardware_display_ltpo_default vendor_sysfs_sfm:file rw_file_perms;
+allow hal_custom_hardware_display_ltpo_default vendor_sysfs_sfm:dir { open read search getattr };
+
+# Read persist.sys.sfm.mode for idle-only vs VRR mode
+get_prop(hal_custom_hardware_display_ltpo_default, sfm_prop)

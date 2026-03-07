@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-License-Identifier: Apache-2.0
+     SPDX-FileCopyrightText: 2026 The halogenOS Project
+-->
+<resources>
+    <string name="app_name">Refresh rate</string>
+    <string name="refresh_rate_title">Refresh rate</string>
+    <string name="refresh_rate_summary">Smooth display and adaptive refresh rate</string>
+
+    <string name="smooth_display_title">Smooth display</string>
+    <string name="smooth_display_summary_on">120Hz for smoother animations</string>
+    <string name="smooth_display_summary_off">60Hz standard refresh rate</string>
+
+    <string name="ltpo_mode_title">LTPO adaptive refresh rate (experimental)</string>
+    <string name="ltpo_mode_off">Off</string>
+    <string name="ltpo_mode_idle">Idle only — drop to 1Hz when screen is idle</string>
+    <string name="ltpo_mode_vrr">Full range — match refresh rate to content</string>
+    <string name="ltpo_mode_summary_off">Panel stays at the selected refresh rate</string>
+    <string name="ltpo_mode_summary_idle">Drops to 1Hz when screen content is idle</string>
+    <string name="ltpo_mode_summary_vrr">Adapts from 1Hz to 120Hz based on content</string>
+    <string name="smooth_display_locked_by_ltpo">Locked to 120Hz while LTPO is active</string>
+</resources>

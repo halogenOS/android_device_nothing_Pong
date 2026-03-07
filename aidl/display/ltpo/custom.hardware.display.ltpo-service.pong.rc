@@ -1,0 +1,14 @@
+service ltpo-hal-pong /vendor/bin/hw/custom.hardware.display.ltpo-service.pong
+    class hal
+    user system
+    group system
+    disabled
+
+on property:persist.sys.sfm.mode=idle
+    start ltpo-hal-pong
+
+on property:persist.sys.sfm.mode=vrr
+    start ltpo-hal-pong
+
+on property:persist.sys.sfm.mode=off
+    stop ltpo-hal-pong

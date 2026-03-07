@@ -5,6 +5,9 @@
 # Charger
 /vendor/bin/hw/vendor\.noth\.hardware\.charge-service      u:object_r:hal_nt_charge_aidl_exec:s0
 
+# Display - LTPO Control HAL
+/vendor/bin/hw/custom\.hardware\.display\.ltpo-service\.pong      u:object_r:hal_custom_hardware_display_ltpo_default_exec:s0
+
 # Fingerprint
 /dev/goodix_fp                                                                         u:object_r:fingerprint_device:s0
 /mnt/vendor/persist/goodix(/.*)?                                                       u:object_r:vendor_persist_goodix_file:s0

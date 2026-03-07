@@ -8,6 +8,10 @@ on boot
     # Fingerprint
     chown system system /dev/goodix_fp
 
+    # Skip Frame Mode (LTPO)
+    chown system system /sys/panel_feature/skip_frame_mode
+    chmod 0660 /sys/panel_feature/skip_frame_mode
+
     # Gestures
     chown system system /sys/devices/platform/goodix_ts.0/edge_mode
     write /sys/devices/platform/goodix_ts.0/edge_mode 4

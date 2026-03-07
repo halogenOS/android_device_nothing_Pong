@@ -1,6 +1,9 @@
 # Charger
 type vendor_proc_charger, fs_type, proc_type;
 
+# Display
+type vendor_sysfs_sfm, fs_type, sysfs_type;
+
 # Fingerprint
 type vendor_persist_goodix_file, file_type;
 

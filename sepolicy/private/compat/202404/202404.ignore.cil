@@ -7,4 +7,5 @@
   ( new_objects
     glyph_app
     sltntc
+    sfm_prop
     system_fingerprint_prop))
