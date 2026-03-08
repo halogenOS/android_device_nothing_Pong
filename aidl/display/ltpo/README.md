@@ -100,27 +100,16 @@ allow hal_custom_hardware_display_ltpo_default vendor_sysfs_sfm:dir { open read 
 /vendor/bin/hw/custom\.hardware\.display\.ltpo-service\.<device>    u:object_r:hal_custom_hardware_display_ltpo_default_exec:s0
 ```
 
-#### 4. Disable AOSP smooth display toggle
+#### 4. Enable smooth display toggle
 
-Since LTPO control includes its own smooth display toggle via
-RefreshRateSettings, disable the stock one to avoid duplication:
+Ensure the AOSP smooth display toggle is visible — the LTPO mode selector
+appears directly below it in Settings and is only shown when the HAL is
+declared on the device:
 
 ```xml
 <!-- In your Settings overlay res/values/config.xml -->
-<bool name="config_show_smooth_display">false</bool>
+<bool name="config_show_smooth_display">true</bool>
 ```
-
-#### 5. Add RefreshRateSettings app (optional)
-
-Copy `RefreshRateSettings/` to your device tree and add to device.mk:
-```makefile
-PRODUCT_PACKAGES += \
-    RefreshRateSettings
-```
-
-This provides the user-facing toggles for smooth display and LTPO mode
-selection in Display settings. The mode selector sets `persist.sys.sfm.mode`
-which starts/stops the HAL service via the init rc trigger.
 
 ## File overview
 
