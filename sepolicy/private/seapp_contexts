@@ -1,2 +1,5 @@
 # Glyph
 user=system seinfo=platform isPrivApp=true name=co.aospa.glyph domain=glyph_app type=system_app_data_file levelFrom=all
+
+# NFC (apex seinfo is "default", not "platform")
+user=nfc seinfo=default isPrivApp=true name=com.android.nfc domain=nfc type=nfc_data_file levelFrom=all
