@@ -17,3 +17,6 @@ rw_dir_file(hal_nt_charge_aidl, vendor_sysfs_battery_supply)
 rw_dir_file(hal_nt_charge_aidl, vendor_sysfs_usb_supply)
 rw_dir_file(hal_nt_charge_aidl, vendor_sysfs_wireless)
 rw_dir_file(hal_nt_charge_aidl, vendor_proc_charger)
+
+# Allow traversing generic sysfs directories to reach labeled nodes
+allow hal_nt_charge_aidl sysfs:dir r_dir_perms;
