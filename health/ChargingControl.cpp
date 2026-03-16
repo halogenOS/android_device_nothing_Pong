@@ -11,13 +11,15 @@
 
 namespace aidl::vendor::lineage::health {
 
-static constexpr const char* kChargingEnabledPath =
+static constexpr const char* kUsbChargingEnabledPath =
         "/sys/class/qcom-battery/usb_charger_en";
+static constexpr const char* kWlsChargingEnabledPath =
+        "/sys/class/qcom-battery/wls_en";
 
 ndk::ScopedAStatus ChargingControl::getChargingEnabled(bool* _aidl_return) {
     std::string content;
-    if (!android::base::ReadFileToString(kChargingEnabledPath, &content, true)) {
-        LOG(ERROR) << "Failed to read " << kChargingEnabledPath;
+    if (!android::base::ReadFileToString(kUsbChargingEnabledPath, &content, true)) {
+        LOG(ERROR) << "Failed to read " << kUsbChargingEnabledPath;
         return ndk::ScopedAStatus::fromExceptionCode(EX_ILLEGAL_STATE);
     }
     *_aidl_return = android::base::Trim(content) == "1";
@@ -25,11 +27,13 @@ ndk::ScopedAStatus ChargingControl::getChargingEnabled(bool* _aidl_return) {
 }
 
 ndk::ScopedAStatus ChargingControl::setChargingEnabled(bool enabled) {
-    if (!android::base::WriteStringToFile(enabled ? "1" : "0", kChargingEnabledPath, true)) {
-        LOG(ERROR) << "Failed to write to " << kChargingEnabledPath;
-        return ndk::ScopedAStatus::fromExceptionCode(EX_ILLEGAL_STATE);
-    }
-    return ndk::ScopedAStatus::ok();
+    const auto val = enabled ? "1" : "0";
+    bool usbOk = android::base::WriteStringToFile(val, kUsbChargingEnabledPath, true);
+    bool wlsOk = android::base::WriteStringToFile(val, kWlsChargingEnabledPath, true);
+    if (!usbOk) LOG(ERROR) << "Failed to write to " << kUsbChargingEnabledPath;
+    if (!wlsOk) LOG(ERROR) << "Failed to write to " << kWlsChargingEnabledPath;
+    return (usbOk || wlsOk) ? ndk::ScopedAStatus::ok()
+                             : ndk::ScopedAStatus::fromExceptionCode(EX_ILLEGAL_STATE);
 }
 
 ndk::ScopedAStatus ChargingControl::setChargingDeadline(int64_t) {
@@ -58,7 +62,8 @@ binder_status_t ChargingControl::dump(int fd, const char**, uint32_t) {
     getChargingEnabled(&enabled);
     dprintf(fd, "Charging enabled: %s\n", enabled ? "true" : "false");
     dprintf(fd, "Supported mode: TOGGLE\n");
-    dprintf(fd, "Node: %s\n", kChargingEnabledPath);
+    dprintf(fd, "USB node: %s\n", kUsbChargingEnabledPath);
+    dprintf(fd, "WLS node: %s\n", kWlsChargingEnabledPath);
     return STATUS_OK;
 }
 
