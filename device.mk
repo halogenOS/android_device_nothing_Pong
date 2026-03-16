@@ -212,10 +212,7 @@ PRODUCT_COPY_FILES += \
 
 # Lineage Health
 PRODUCT_PACKAGES += \
-    vendor.lineage.health-service.default
-
-$(call soong_config_set,lineage_health,charging_control_charging_path,/sys/class/qcom-battery/scenario_fcc)
-$(call soong_config_set,lineage_health,charging_control_charging_enabled,9000)
+    vendor.lineage.health-service.pong
 
 # Media
 PRODUCT_COPY_FILES += \
