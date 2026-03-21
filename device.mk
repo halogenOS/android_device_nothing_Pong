@@ -274,6 +274,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 PRODUCT_PACKAGES += \
     custom.hardware.display.ltpo-service.pong
 
+PRODUCT_VENDOR_PROPERTIES += \
+    persist.sys.sfm.mode=vrr
+
 # Glyph
 PRODUCT_PACKAGES += \
     ParanoidGlyphPhone2 \
