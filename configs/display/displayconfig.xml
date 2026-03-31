@@ -6,39 +6,39 @@
         </point>
         <point>
             <value>0.02442</value>
-            <nits>2.6</nits>
+            <nits>2.9</nits>
         </point>
         <point>
             <value>0.131868</value>
-            <nits>10.0</nits>
+            <nits>11.0</nits>
         </point>
         <point>
             <value>0.2967</value>
-            <nits>50.0</nits>
+            <nits>56.0</nits>
         </point>
         <point>
             <value>0.41465</value>
-            <nits>100.0</nits>
+            <nits>111.0</nits>
         </point>
         <point>
             <value>0.5707</value>
-            <nits>200.0</nits>
+            <nits>222.0</nits>
         </point>
         <point>
             <value>0.6908</value>
-            <nits>300.0</nits>
+            <nits>333.0</nits>
         </point>
         <point>
             <value>0.858364</value>
-            <nits>490.0</nits>
+            <nits>545.0</nits>
         </point>
         <point>
             <value>0.99634</value>
-            <nits>980.0</nits>
+            <nits>1090.0</nits>
         </point>
         <point>
             <value>1.0</value>
-            <nits>1440.0</nits>
+            <nits>1600.0</nits>
         </point>
     </screenBrightnessMap>
     <highBrightnessMode enabled="true">
