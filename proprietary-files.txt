@@ -1713,6 +1713,10 @@ vendor/lib64/vendor.qti.hardware.radio.uim_remote_server@1.0.so
 vendor/bin/rmt_storage
 vendor/etc/init/vendor.qti.rmt_storage.rc
 
+# Richtap
+odm/etc/aac_richtap.config
+vendor/lib64/libaacvibrator.so
+
 # SCVE
 vendor/lib64/libscveCommon.so
 vendor/lib64/libscveCommon_stub.so
