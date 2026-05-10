@@ -168,6 +168,12 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es,
     ALOGD("Performing effect_id=0x%x (mapped from %d), strength=%d",
           mappedEffect.value(), static_cast<int>(effect), strength);
 
+    // Drop any pending pattern in the looper queue before scheduling the new
+    // one. Without this, fast-repeating perform() calls (e.g. swiping the
+    // Niagara A-Z bar) pile up in libaacvibrator's FIFO and keep firing long
+    // after the user-visible animation has finished.
+    aac_vibra_looper_stopPerformHe();
+
     int32_t ret = aac_vibra_looper_prebaked_effect(mappedEffect.value(), strength);
 
     if (ret < 0) {
