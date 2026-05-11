@@ -56,6 +56,16 @@ ndk::ScopedAStatus Vibrator::getCapabilities(int32_t* _aidl_return) {
 
 ndk::ScopedAStatus Vibrator::off() {
     ALOGD("off() lastMode=%d", sLastMode);
+
+    // Stop both the looper-side pattern queue and the non-looper path.
+    // looper_stopPerformHe() drains any pending/playing prebaked or
+    // looper_on pattern (which is what almost every vibrate() ends up
+    // doing); aac_vibra_off() additionally clears the non-looper state.
+    // Without the first call a long on(timeoutMs) keeps running until
+    // its own timeout — observed as a vibrator "stuck on" after the
+    // triggering app is dismissed.
+    aac_vibra_looper_stopPerformHe();
+
     int32_t ret = aac_vibra_off();
     if (ret) {
         ALOGE("AAC off failed: %d\n", ret);
