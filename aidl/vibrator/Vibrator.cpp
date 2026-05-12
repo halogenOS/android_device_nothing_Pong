@@ -11,11 +11,27 @@
 
 #include <thread>
 
+#include <atomic>
+#include <chrono>
+
 #include "aac_vibra_function.h"
 
 #define RICHTAP_LIGHT_STRENGTH 69
 #define RICHTAP_MEDIUM_STRENGTH 100
 #define RICHTAP_STRONG_STRENGTH 150
+
+// Tunables for the rapid-perform cancel heuristic.
+// Two perform() calls within this window count as part of a "rapid sequence"
+// (e.g. fast typing, Niagara A-Z swipe). Pattern itself is ~18ms, so 100ms
+// comfortably covers both two-finger typing pauses and fast swipes.
+#define RAPID_PERFORM_WINDOW_MS 100
+// Only start draining the looper queue from the Nth rapid call onward. The
+// first few performs in a burst run with a clean (or nearly clean) queue, so
+// each tick gets to play out — important for fast two-finger typing where
+// the user expects every key to give haptic feedback. Subsequent calls in
+// the same burst (i.e. an actual A-Z scroll) start draining so the queue
+// doesn't accumulate beyond the on-screen animation.
+#define RAPID_PERFORM_DRAIN_AFTER 3
 
 enum vibrationMode {
     MODE_NONE,
@@ -25,6 +41,13 @@ enum vibrationMode {
 };
 
 static vibrationMode sLastMode = MODE_NONE;
+static std::atomic<int64_t> sLastPerformMs{0};
+static std::atomic<int> sRapidPerformCount{0};
+
+static int64_t nowMs() {
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
+}
 
 namespace aidl {
 namespace android {
@@ -178,11 +201,20 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es,
     ALOGD("Performing effect_id=0x%x (mapped from %d), strength=%d",
           mappedEffect.value(), static_cast<int>(effect), strength);
 
-    // Drop any pending pattern in the looper queue before scheduling the new
-    // one. Without this, fast-repeating perform() calls (e.g. swiping the
-    // Niagara A-Z bar) pile up in libaacvibrator's FIFO and keep firing long
-    // after the user-visible animation has finished.
-    aac_vibra_looper_stopPerformHe();
+    // Rapid-sequence cancel: drain the looper queue ONLY once we're a few
+    // performs deep into a burst. The first couple of rapid taps run with a
+    // clean queue (preserves haptic feedback for fast two-finger typing),
+    // later ones drain so a Niagara-style A-Z swipe doesn't pile up patterns
+    // past the on-screen animation.
+    int64_t now = nowMs();
+    int64_t last = sLastPerformMs.exchange(now);
+    if (now - last < RAPID_PERFORM_WINDOW_MS) {
+        if (sRapidPerformCount.fetch_add(1) + 1 >= RAPID_PERFORM_DRAIN_AFTER) {
+            aac_vibra_looper_stopPerformHe();
+        }
+    } else {
+        sRapidPerformCount.store(0);
+    }
 
     int32_t ret = aac_vibra_looper_prebaked_effect(mappedEffect.value(), strength);
 
