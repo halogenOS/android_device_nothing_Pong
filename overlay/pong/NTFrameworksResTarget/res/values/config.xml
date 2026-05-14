@@ -462,4 +462,6 @@
          2: gestures only for back, home and overview -->
     <integer name="config_navBarInteractionMode">2</integer>
 
+    <!-- Fingerprint from stock ROM -->
+    <string name="config_stockFingerprint" translatable="false">Nothing/Pong/Pong:16/BQ2A.250721.001-BP2A.250605.031.A3/2604141749:user/release-keys</string>
 </resources>
