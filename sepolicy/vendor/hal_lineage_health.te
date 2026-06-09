@@ -1,7 +1,0 @@
-r_dir_file(hal_lineage_health_default, vendor_sysfs_battery_supply)
-allow hal_lineage_health_default vendor_sysfs_battery_supply:file rw_file_perms;
-allow hal_lineage_health_default vendor_sysfs_battery_supply:dir search;
-
-# scenario_fcc (fast-charge-current limit) is labelled as usb_supply but lives
-# under the battery class dir; the charge-control HAL drives it to gate current.
-allow hal_lineage_health_default vendor_sysfs_usb_supply:file rw_file_perms;

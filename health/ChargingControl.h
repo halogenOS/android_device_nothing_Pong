@@ -7,17 +7,14 @@
 
 #include <aidl/vendor/lineage/health/BnChargingControl.h>
 #include <aidl/vendor/lineage/health/ChargingControlSupportedMode.h>
+#include <aidl/vendor/noth/hardware/charge/ICharge.h>
 
 #include <atomic>
-#include <mutex>
-#include <thread>
+#include <memory>
 
 namespace aidl::vendor::lineage::health {
 
 struct ChargingControl : public BnChargingControl {
-    ChargingControl() = default;
-    ~ChargingControl();
-
     ndk::ScopedAStatus getChargingEnabled(bool* _aidl_return) override;
     ndk::ScopedAStatus setChargingEnabled(bool enabled) override;
     ndk::ScopedAStatus setChargingDeadline(int64_t deadline) override;
@@ -29,15 +26,15 @@ struct ChargingControl : public BnChargingControl {
     binder_status_t dump(int fd, const char** args, uint32_t numArgs) override;
 
   private:
-    // scenario_fcc is shared with the vendor thermal daemon, which periodically
-    // rewrites it. While the limit is engaged we hold it at 0 in a re-assert
-    // loop so the daemon can't quietly resume charging behind us.
-    void startLimit();
-    void stopLimit();
+    // Casts a battery-health FCC vote on the vendor charge daemon. The daemon
+    // owns scenario_fcc and recomputes it as min() of all voters, so voting 0
+    // makes it hold the current at zero itself -- no sysfs race, and the thermal
+    // voter is left intact.
+    std::shared_ptr<::aidl::vendor::noth::hardware::charge::ICharge> getCharge();
+    void voteChargeFcc(int milliamps);
 
-    std::mutex mLock;
+    std::shared_ptr<::aidl::vendor::noth::hardware::charge::ICharge> mCharge;
     std::atomic<bool> mLimitActive{false};
-    std::thread mLimitThread;
 };
 
 }  // namespace aidl::vendor::lineage::health

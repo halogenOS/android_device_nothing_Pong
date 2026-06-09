@@ -1,0 +1,22 @@
+# The charge-control service runs in its own domain rather than the shared
+# hal_lineage_health_default so it can be granted client access to the vendor
+# charge daemon. That grant is a typeattribute on this domain, which is only
+# valid where the domain is declared -- here, ahead of the rules that use it.
+type hal_lineage_health_pong, domain;
+hal_server_domain(hal_lineage_health_pong, hal_lineage_health)
+
+type hal_lineage_health_pong_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(hal_lineage_health_pong)
+
+binder_call(hal_lineage_health_pong, servicemanager)
+
+# usb_charger_en (wired gate) lives under the battery class.
+r_dir_file(hal_lineage_health_pong, vendor_sysfs_battery_supply)
+allow hal_lineage_health_pong vendor_sysfs_battery_supply:file rw_file_perms;
+allow hal_lineage_health_pong vendor_sysfs_battery_supply:dir search;
+
+# /sys/class/power_supply/wireless/online to choose the wired vs wireless path.
+r_dir_file(hal_lineage_health_pong, vendor_sysfs_usb_supply)
+
+# Vote on the vendor charge daemon's battery-health FCC voter (setChargeFcc).
+hal_client_domain(hal_lineage_health_pong, vendor_hal_nt_charge)
