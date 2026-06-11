@@ -41,6 +41,25 @@ static bool wirelessOnline() {
            android::base::Trim(content) == "1";
 }
 
+// Spacewar (pure QTI, no scenario_fcc layer) holds the wireless limit purely with
+// the battery-side charge-current limit (BATT_CHG_CTRL_LIM, driven by restrict).
+// On Pong the OEM scenario_fcc voter caps the bulk of the current but leaves a
+// small trickle; driving the battery-side limit to 0 as well aims to kill it.
+static constexpr const char* kRestrictCurPath =
+        "/sys/class/qcom-battery/restrict_cur";
+static constexpr const char* kRestrictChgPath =
+        "/sys/class/qcom-battery/restrict_chg";
+
+static void setBatteryChargeRestricted(bool restricted) {
+    if (restricted) {
+        // restrict_cur=0 stores a 0uA FCC, restrict_chg=1 applies it.
+        android::base::WriteStringToFile("0", kRestrictCurPath, true);
+        android::base::WriteStringToFile("1", kRestrictChgPath, true);
+    } else {
+        android::base::WriteStringToFile("0", kRestrictChgPath, true);
+    }
+}
+
 std::shared_ptr<ICharge> ChargingControl::getCharge() {
     if (mCharge) return mCharge;
     const auto name = std::string(ICharge::descriptor) + "/default";
@@ -71,14 +90,16 @@ ndk::ScopedAStatus ChargingControl::getChargingEnabled(bool* _aidl_return) {
 
 ndk::ScopedAStatus ChargingControl::setChargingEnabled(bool enabled) {
     if (enabled) {
-        // Release both mechanisms unconditionally; each is a no-op if it was
+        // Release every mechanism unconditionally; each is a no-op if it was
         // never engaged, and the source may have changed since the limit hit.
+        setBatteryChargeRestricted(false);
         voteChargeFcc(kFccResumeMilliamps);
         if (!android::base::WriteStringToFile("1", kUsbChargingEnabledPath, true))
             LOG(ERROR) << "Failed to write " << kUsbChargingEnabledPath;
         mLimitActive = false;
     } else if (wirelessOnline()) {
         voteChargeFcc(kFccStopMilliamps);
+        setBatteryChargeRestricted(true);
         mLimitActive = true;
     } else {
         if (!android::base::WriteStringToFile("0", kUsbChargingEnabledPath, true))
