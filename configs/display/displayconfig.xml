@@ -54,4 +54,75 @@
         <thermalStatusLimit>critical</thermalStatusLimit>
         <minimumHdrPercentOfScreen>0.4</minimumHdrPercentOfScreen>
     </highBrightnessMode>
+    <!-- The panel DBV scale is gamma 2.2 encoded (nits = 545 * (backlight / 0.858364)^2.2),
+         while the framework brightness slider assumes a backlight value proportional to
+         luminance. Remap the framework brightness scale to be linear in nits
+         (brightness = nits / 1600) so the slider gamma curve lands on actual luminance.
+         The extended dimming part of the feature is neutralized: the minimum stays at the
+         panel floor (DBV 10 = 2.09 nits) for all lux values. -->
+    <evenDimmer enabled="true">
+        <transitionPoint>0.00130625</transitionPoint>
+        <brightnessMapping>
+            <brightnessPoint>
+                <nits>2.09</nits>
+                <backlight>0.00245</backlight>
+                <brightness>0.00130625</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>2.9</nits>
+                <backlight>0.02442</backlight>
+                <brightness>0.0018125</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>11.0</nits>
+                <backlight>0.131868</backlight>
+                <brightness>0.006875</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>56.0</nits>
+                <backlight>0.2967</backlight>
+                <brightness>0.035</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>111.0</nits>
+                <backlight>0.41465</backlight>
+                <brightness>0.069375</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>222.0</nits>
+                <backlight>0.5707</backlight>
+                <brightness>0.13875</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>333.0</nits>
+                <backlight>0.6908</backlight>
+                <brightness>0.208125</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>545.0</nits>
+                <backlight>0.858364</backlight>
+                <brightness>0.340625</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>1090.0</nits>
+                <backlight>0.99634</backlight>
+                <brightness>0.68125</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>1600.0</nits>
+                <backlight>1.0</backlight>
+                <brightness>1.0</brightness>
+            </brightnessPoint>
+        </brightnessMapping>
+        <luxToMinimumNitsMap>
+            <point>
+                <value>0.0</value>
+                <nits>2.09</nits>
+            </point>
+            <point>
+                <value>100000.0</value>
+                <nits>2.09</nits>
+            </point>
+        </luxToMinimumNitsMap>
+    </evenDimmer>
 </displayConfiguration>
