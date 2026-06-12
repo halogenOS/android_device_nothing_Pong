@@ -11,6 +11,7 @@
 
 #include <atomic>
 #include <memory>
+#include <thread>
 
 namespace aidl::vendor::lineage::health {
 
@@ -33,8 +34,18 @@ struct ChargingControl : public BnChargingControl {
     std::shared_ptr<::aidl::vendor::noth::hardware::charge::ICharge> getCharge();
     void voteChargeFcc(int milliamps);
 
+    // The battery-side stop (BATT_CHG_CTRL_LIM=0) is reset by a contending vendor
+    // writer between the framework's sparse calls, so charging resumes in the gaps.
+    // Hold it down by re-asserting it from a loop while the wireless limit is active.
+    void startRestrictReassert();
+    void stopRestrictReassert();
+
     std::shared_ptr<::aidl::vendor::noth::hardware::charge::ICharge> mCharge;
     std::atomic<bool> mLimitActive{false};
+    std::atomic<bool> mReassert{false};
+    // Latched when the fake-vbat probe misbehaves; blocks retries until reboot.
+    std::atomic<bool> mFakeVbatUnsafe{false};
+    std::thread mReassertThread;
 };
 
 }  // namespace aidl::vendor::lineage::health

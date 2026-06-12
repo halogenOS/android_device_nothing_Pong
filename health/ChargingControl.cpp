@@ -10,6 +10,9 @@
 #include <android-base/strings.h>
 #include <android/binder_manager.h>
 
+#include <chrono>
+#include <cstdlib>
+
 namespace aidl::vendor::lineage::health {
 
 using ::aidl::vendor::noth::hardware::charge::ICharge;
@@ -60,6 +63,62 @@ static void setBatteryChargeRestricted(bool restricted) {
     }
 }
 
+// The FCC paths above only throttle: the firmware keeps a ~37mA wireless
+// maintenance trickle that creeps past the limit overnight. What does fully
+// stop current with the link alive is the firmware's own end-of-charge
+// (observed at natural 100%). BATT_FAKE_VBAT is the factory aging-test
+// override for the battery voltage the firmware sees; faking a full battery
+// triggers that native EOC at any SoC. EXPERIMENTAL: unit (mV vs uV) is
+// unverified, so the hold loop watches current_now and aborts the fake if
+// charging current rises instead of stopping.
+static constexpr const char* kFakeVbatPath = "/proc/charger/nt_fake_vbat";
+static constexpr const char* kFakeVbatFull = "4600";
+static constexpr const char* kFakeVbatOff = "0";
+
+void ChargingControl::startRestrictReassert() {
+    if (mReassert.exchange(true)) return;
+    mReassertThread = std::thread([this] {
+        int sample = 0, hot = 0;
+        while (mReassert.load()) {
+            setBatteryChargeRestricted(true);
+            // The firmware can clear the fake on a link renegotiation, so it is
+            // re-asserted every cycle while the pad is online -- and cleared as
+            // soon as the pad is gone, so a discharging battery never reports a
+            // fake full voltage to the firmware's safety logic.
+            bool fakeActive = false;
+            if (!mFakeVbatUnsafe.load()) {
+                fakeActive = wirelessOnline();
+                android::base::WriteStringToFile(fakeActive ? kFakeVbatFull : kFakeVbatOff,
+                                                 kFakeVbatPath, true);
+            }
+            // Abort guard: after a settle period, sustained charging current
+            // means the firmware is charging despite the fake -- clear it and
+            // never retry (the FCC throttles stay engaged regardless).
+            if (fakeActive && ++sample > 3) {
+                std::string cur;
+                android::base::ReadFileToString(
+                        "/sys/class/power_supply/battery/current_now", &cur, true);
+                int curUa = atoi(android::base::Trim(cur).c_str());
+                hot = curUa > 150000 ? hot + 1 : 0;
+                if (hot >= 2) {
+                    android::base::WriteStringToFile(kFakeVbatOff, kFakeVbatPath, true);
+                    mFakeVbatUnsafe = true;
+                    LOG(ERROR) << "WLS-FAKE ABORT: charging current rose under fake vbat";
+                }
+            }
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+        }
+    });
+}
+
+void ChargingControl::stopRestrictReassert() {
+    if (!mReassert.exchange(false)) return;
+    if (mReassertThread.joinable()) mReassertThread.join();
+    setBatteryChargeRestricted(false);
+    if (!android::base::WriteStringToFile(kFakeVbatOff, kFakeVbatPath, true))
+        LOG(ERROR) << "Failed to clear " << kFakeVbatPath;
+}
+
 std::shared_ptr<ICharge> ChargingControl::getCharge() {
     if (mCharge) return mCharge;
     const auto name = std::string(ICharge::descriptor) + "/default";
@@ -92,16 +151,17 @@ ndk::ScopedAStatus ChargingControl::setChargingEnabled(bool enabled) {
     if (enabled) {
         // Release every mechanism unconditionally; each is a no-op if it was
         // never engaged, and the source may have changed since the limit hit.
-        setBatteryChargeRestricted(false);
+        stopRestrictReassert();
         voteChargeFcc(kFccResumeMilliamps);
         if (!android::base::WriteStringToFile("1", kUsbChargingEnabledPath, true))
             LOG(ERROR) << "Failed to write " << kUsbChargingEnabledPath;
         mLimitActive = false;
     } else if (wirelessOnline()) {
         voteChargeFcc(kFccStopMilliamps);
-        setBatteryChargeRestricted(true);
+        startRestrictReassert();
         mLimitActive = true;
     } else {
+        stopRestrictReassert();
         if (!android::base::WriteStringToFile("0", kUsbChargingEnabledPath, true))
             LOG(ERROR) << "Failed to write " << kUsbChargingEnabledPath;
         mLimitActive = true;

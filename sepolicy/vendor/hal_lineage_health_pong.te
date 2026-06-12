@@ -20,3 +20,7 @@ r_dir_file(hal_lineage_health_pong, vendor_sysfs_usb_supply)
 
 # Vote on the vendor charge daemon's battery-health FCC voter (setChargeFcc).
 hal_client_domain(hal_lineage_health_pong, vendor_hal_nt_charge)
+
+# nt_fake_vbat (aging-test voltage override): triggers the firmware's native
+# end-of-charge at the limit, stopping wireless current with the Rx link up.
+rw_dir_file(hal_lineage_health_pong, vendor_proc_charger)
