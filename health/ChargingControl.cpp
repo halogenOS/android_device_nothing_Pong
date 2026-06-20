@@ -44,6 +44,19 @@ static bool wirelessOnline() {
            android::base::Trim(content) == "1";
 }
 
+// Matches the framework's RECHARGE_MARGIN: a genuine recharge only fires once the
+// level has fallen this far below the cap, so an "enable" arriving while still
+// within this band of the cap is a spurious renegotiation blip, not a recharge.
+static constexpr int kRechargeMargin = 4;
+
+static int readCapacity() {
+    std::string content;
+    if (!android::base::ReadFileToString("/sys/class/power_supply/battery/capacity",
+                                         &content, true))
+        return -1;
+    return atoi(android::base::Trim(content).c_str());
+}
+
 // Spacewar (pure QTI, no scenario_fcc layer) holds the wireless limit purely with
 // the battery-side charge-current limit (BATT_CHG_CTRL_LIM, driven by restrict).
 // On Pong the OEM scenario_fcc voter caps the bulk of the current but leaves a
@@ -74,36 +87,42 @@ static void setBatteryChargeRestricted(bool restricted) {
 static constexpr const char* kFakeVbatPath = "/proc/charger/nt_fake_vbat";
 static constexpr const char* kFakeVbatFull = "4600";
 static constexpr const char* kFakeVbatOff = "0";
+// wirelessOnline() flaps false during the pad's frequent link renegotiations;
+// only treat the pad as gone after this many consecutive offline cycles (2s
+// each) so a flap doesn't drop the fake and let the firmware resume charging.
+static constexpr int kOfflineClearCycles = 5;
 
 void ChargingControl::startRestrictReassert() {
     if (mReassert.exchange(true)) return;
+    // Retry the fake on every fresh engagement: a transient must never disable
+    // it for the rest of the boot.
+    mFakeVbatUnsafe = false;
     mReassertThread = std::thread([this] {
-        int sample = 0, hot = 0;
+        int offline = 0, sample = 0, hot = 0;
         while (mReassert.load()) {
             setBatteryChargeRestricted(true);
-            // The firmware can clear the fake on a link renegotiation, so it is
-            // re-asserted every cycle while the pad is online -- and cleared as
-            // soon as the pad is gone, so a discharging battery never reports a
-            // fake full voltage to the firmware's safety logic.
-            bool fakeActive = false;
-            if (!mFakeVbatUnsafe.load()) {
-                fakeActive = wirelessOnline();
-                android::base::WriteStringToFile(fakeActive ? kFakeVbatFull : kFakeVbatOff,
-                                                 kFakeVbatPath, true);
-            }
-            // Abort guard: after a settle period, sustained charging current
-            // means the firmware is charging despite the fake -- clear it and
-            // never retry (the FCC throttles stay engaged regardless).
+            // Re-assert the fake every cycle (the firmware clears it on each link
+            // renegotiation). wirelessOnline() flaps false mid-renegotiation
+            // while the pad is still delivering, so only treat the pad as gone
+            // after a sustained offline window; the restrict above caps current
+            // to a trickle during any gap, so brief flaps don't leak charge.
+            offline = wirelessOnline() ? 0 : offline + 1;
+            bool offPad = offline >= kOfflineClearCycles;
+            bool fakeActive = !mFakeVbatUnsafe.load() && !offPad;
+            android::base::WriteStringToFile(fakeActive ? kFakeVbatFull : kFakeVbatOff,
+                                             kFakeVbatPath, true);
+            // Safety: if charging current rises under the fake, the firmware is
+            // not honouring it -- back off the fake for the rest of THIS
+            // engagement (a fresh engage retries). FCC restrict stays engaged.
             if (fakeActive && ++sample > 3) {
                 std::string cur;
                 android::base::ReadFileToString(
                         "/sys/class/power_supply/battery/current_now", &cur, true);
-                int curUa = atoi(android::base::Trim(cur).c_str());
-                hot = curUa > 150000 ? hot + 1 : 0;
+                hot = atoi(android::base::Trim(cur).c_str()) > 150000 ? hot + 1 : 0;
                 if (hot >= 2) {
                     android::base::WriteStringToFile(kFakeVbatOff, kFakeVbatPath, true);
                     mFakeVbatUnsafe = true;
-                    LOG(ERROR) << "WLS-FAKE ABORT: charging current rose under fake vbat";
+                    LOG(ERROR) << "WLS-FAKE: charging under fake vbat, backing off";
                 }
             }
             std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -149,6 +168,16 @@ ndk::ScopedAStatus ChargingControl::getChargingEnabled(bool* _aidl_return) {
 
 ndk::ScopedAStatus ChargingControl::setChargingEnabled(bool enabled) {
     if (enabled) {
+        // A wireless link renegotiation briefly flips the firmware to CHARGING at
+        // limit-1, and the framework misreads that as "charging up" and calls
+        // enable -- which would stop the hold and, in doze, let the battery charge
+        // well past the cap before the framework reacts again. While we're holding
+        // the wireless cap and the battery is still within RECHARGE_MARGIN of it,
+        // this is that spurious blip, not a real recharge: keep holding.
+        if (mReassert.load() && readCapacity() > mCapLimit.load() - kRechargeMargin) {
+            LOG(INFO) << "Ignoring near-cap enable (holding at ~" << mCapLimit.load() << "%)";
+            return ndk::ScopedAStatus::ok();
+        }
         // Release every mechanism unconditionally; each is a no-op if it was
         // never engaged, and the source may have changed since the limit hit.
         stopRestrictReassert();
@@ -157,6 +186,10 @@ ndk::ScopedAStatus ChargingControl::setChargingEnabled(bool enabled) {
             LOG(ERROR) << "Failed to write " << kUsbChargingEnabledPath;
         mLimitActive = false;
     } else if (wirelessOnline()) {
+        // Record the cap (the lowest level a disable ever fires at ~ the limit),
+        // so spurious near-cap enables above can be distinguished from recharges.
+        int cap = readCapacity();
+        if (cap >= 0 && cap < mCapLimit.load()) mCapLimit = cap;
         voteChargeFcc(kFccStopMilliamps);
         startRestrictReassert();
         mLimitActive = true;

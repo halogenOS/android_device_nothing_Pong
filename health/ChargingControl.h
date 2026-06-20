@@ -42,8 +42,13 @@ struct ChargingControl : public BnChargingControl {
 
     std::shared_ptr<::aidl::vendor::noth::hardware::charge::ICharge> mCharge;
     std::atomic<bool> mLimitActive{false};
+    // Capacity at which the wireless hold engaged (~the configured limit). Used to
+    // tell a genuine recharge (battery dropped well below it) from a spurious
+    // "enable" the framework issues on a wireless link renegotiation near the cap.
+    std::atomic<int> mCapLimit{100};
     std::atomic<bool> mReassert{false};
-    // Latched when the fake-vbat probe misbehaves; blocks retries until reboot.
+    // Set if the fake-vbat probe misbehaves; backs it off for the current
+    // wireless engagement only (reset on each fresh engage).
     std::atomic<bool> mFakeVbatUnsafe{false};
     std::thread mReassertThread;
 };
