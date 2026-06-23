@@ -34,23 +34,32 @@ struct ChargingControl : public BnChargingControl {
     std::shared_ptr<::aidl::vendor::noth::hardware::charge::ICharge> getCharge();
     void voteChargeFcc(int milliamps);
 
-    // The battery-side stop (BATT_CHG_CTRL_LIM=0) is reset by a contending vendor
-    // writer between the framework's sparse calls, so charging resumes in the gaps.
-    // Hold it down by re-asserting it from a loop while the wireless limit is active.
-    void startRestrictReassert();
-    void stopRestrictReassert();
+    // We report LIMIT mode, so the framework hands us the band once and stops
+    // toggling -- the enforcement runs entirely here, off a self-contained loop
+    // that drives the band against the live battery capacity. This is the whole
+    // point of the rework: nothing external (a doze-throttled framework, a
+    // renegotiation-induced spurious enable) can ever stop the hold, which is
+    // what previously let the battery run to 100%.
+    void startEnforcement();
+    void stopEnforcement();
+    // Resume charging on every front: idempotent, used to recharge below the
+    // band and to fully let go when the limit is removed.
+    void releaseCharging();
 
     std::shared_ptr<::aidl::vendor::noth::hardware::charge::ICharge> mCharge;
-    std::atomic<bool> mLimitActive{false};
-    // Capacity at which the wireless hold engaged (~the configured limit). Used to
-    // tell a genuine recharge (battery dropped well below it) from a spurious
-    // "enable" the framework issues on a wireless link renegotiation near the cap.
-    std::atomic<int> mCapLimit{100};
-    std::atomic<bool> mReassert{false};
+
+    std::atomic<bool> mEnforcing{false};
+    std::thread mEnforceThread;
+    // The band handed to us by the framework via setChargingLimit (max = the
+    // configured limit, min = limit - recharge margin).
+    std::atomic<int> mMax{100};
+    std::atomic<int> mMin{0};
+    // True while we are actively holding at the top of the band (vs charging up
+    // to it); drives getChargingEnabled() and the dump.
+    std::atomic<bool> mHolding{false};
     // Set if the fake-vbat probe misbehaves; backs it off for the current
     // wireless engagement only (reset on each fresh engage).
     std::atomic<bool> mFakeVbatUnsafe{false};
-    std::thread mReassertThread;
 };
 
 }  // namespace aidl::vendor::lineage::health
