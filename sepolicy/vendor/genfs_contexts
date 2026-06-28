@@ -5,8 +5,6 @@ genfscon sysfs /class/qcom-battery/scenario_fcc         u:object_r:vendor_sysfs_
 genfscon sysfs /class/qcom-battery/usb_charger_en       u:object_r:vendor_sysfs_battery_supply:s0
 genfscon sysfs /class/qcom-battery/usb_real_type        u:object_r:vendor_sysfs_usb_supply:s0
 genfscon sysfs /class/qcom-battery/wls_en               u:object_r:vendor_sysfs_battery_supply:s0
-genfscon sysfs /class/qcom-battery/restrict_cur         u:object_r:vendor_sysfs_battery_supply:s0
-genfscon sysfs /class/qcom-battery/restrict_chg         u:object_r:vendor_sysfs_battery_supply:s0
 genfscon sysfs /class/qcom-battery/wireless_boost_en    u:object_r:vendor_sysfs_wireless:s0
 genfscon sysfs /class/qcom-battery/wls_reverse_status   u:object_r:vendor_sysfs_wireless:s0
 

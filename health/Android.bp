@@ -17,6 +17,5 @@ cc_binary {
         "libbase",
         "libbinder_ndk",
         "vendor.lineage.health-V2-ndk",
-        "vendor.noth.hardware.charge-V1-ndk",
     ],
 }
