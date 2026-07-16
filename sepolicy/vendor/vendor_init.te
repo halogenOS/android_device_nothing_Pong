@@ -1,2 +1,4 @@
 set_prop(vendor_init, vendor_camera_prop)
 get_prop(vendor_init, sfm_prop)
+
+allow vendor_init vendor_sysfs_sensors:file setattr;

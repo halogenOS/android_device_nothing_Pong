@@ -18,7 +18,7 @@ on boot
     chown system system /sys/devices/platform/goodix_ts.0/gesture/fod_en
     write /sys/devices/platform/goodix_ts.0/gesture/fod_en 1
     chown system system /sys/devices/platform/goodix_ts.0/gesture/single_en
-    write /sys/devices/platform/goodix_ts.0/gesture/single_en 1
+    chown system system /sys/devices/platform/goodix_ts.0/gesture/double_en
 
     # Glyphs
     chown system system /sys/devices/platform/soc/994000.i2c/i2c-0/0-003a/leds/led_strips/all_white_brightness
