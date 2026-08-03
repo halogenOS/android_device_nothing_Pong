@@ -16,4 +16,7 @@
     <!-- Whether the device supports wireless charging or not -->
     <bool name="config_deviceSupportsWirelessCharging">true</bool>
 
+    <!-- Whether the double tap sensor reports the coordinates of the tap -->
+    <bool name="doze_double_tap_reports_touch_coordinates">true</bool>
+
 </resources>
