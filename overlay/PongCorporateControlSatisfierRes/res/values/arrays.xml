@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The halogenOS Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <!-- Device-specific conformance attributes: properties this device has
+         that the claimed (certified) device does not — partitions that are
+         empty on stock carry no ro.product.<part>.* set, the OEM feature
+         props are vendor-specific, and the HAL service bookkeeping names this
+         device's services. SYSPROP_HIDE makes spoof-target processes answer
+         "no such property" for them, matching stock. -->
+    <string-array name="control_conformance_attributes_device" translatable="false">
+        <item>SYSPROP_HIDE.ro.product.odm.brand</item>
+        <item>SYSPROP_HIDE.ro.product.odm.device</item>
+        <item>SYSPROP_HIDE.ro.product.odm.manufacturer</item>
+        <item>SYSPROP_HIDE.ro.product.odm.model</item>
+        <item>SYSPROP_HIDE.ro.product.odm.name</item>
+        <item>SYSPROP_HIDE.ro.product.bootimage.brand</item>
+        <item>SYSPROP_HIDE.ro.product.bootimage.device</item>
+        <item>SYSPROP_HIDE.ro.product.bootimage.manufacturer</item>
+        <item>SYSPROP_HIDE.ro.product.bootimage.model</item>
+        <item>SYSPROP_HIDE.ro.product.bootimage.name</item>
+        <item>SYSPROP_HIDE.ro.build.nothing.feature.base</item>
+        <item>SYSPROP_HIDE.ro.build.nothing.feature.diff.device.Pong</item>
+        <item>SYSPROP_HIDE.init.svc.ltpo-hal-pong</item>
+        <item>SYSPROP_HIDE.init.svc.vendor.fingerprint-nothing</item>
+        <item>SYSPROP_HIDE.init.svc_debug_pid.custom.hardware.biometrics.fingerprint.udfps-nothing</item>
+        <item>SYSPROP_HIDE.init.svc_debug_pid.ltpo-hal-pong</item>
+        <item>SYSPROP_HIDE.init.svc_debug_pid.vendor.fingerprint-nothing</item>
+        <item>SYSPROP_HIDE.ro.boottime.custom.hardware.biometrics.fingerprint.udfps-nothing</item>
+        <item>SYSPROP_HIDE.ro.boottime.ltpo-hal-pong</item>
+        <item>SYSPROP_HIDE.ro.boottime.vendor.fingerprint-nothing</item>
+    </string-array>
+</resources>
